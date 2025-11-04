@@ -11,7 +11,7 @@ public class InterestSelector {
 
     // cli functions for all the parts of the interest section of the survey
 
-    public Interest promptInterest() {
+    public Interest promptForInterest() {
         Scanner sc = new Scanner(System.in);
         Interest selectedInterest = null;
 
