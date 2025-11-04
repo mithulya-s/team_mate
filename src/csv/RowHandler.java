@@ -1,6 +1,9 @@
-package utilities;
+package csv;
 
 import base.Participant;
+import utilities.Interest;
+import utilities.PersonalityType;
+import utilities.Role;
 
 
 import java.util.ArrayList;
