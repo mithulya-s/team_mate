@@ -5,6 +5,10 @@ import utilities.Interest;
 import java.util.Scanner;
 
 public class InterestSelector {
+    public InterestSelector(Scanner surveyScanner) {
+        //takes in the stuff from the survey class
+    }
+
     // cli functions for all the parts of the interest section of the survey
 
     public Interest promptInterest() {
