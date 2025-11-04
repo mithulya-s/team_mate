@@ -6,6 +6,9 @@ import utilities.PersonalityType;
 import java.util.Scanner;
 
 public class PersonalityScorer {
+    public PersonalityScorer(Scanner surveyScanner) {
+    }
+
     public int promptForPersonality() {
         Scanner sc = new Scanner(System.in);
         int score =0;
@@ -32,6 +35,7 @@ public class PersonalityScorer {
 
         //no need to return the persoality type since the class returns from the top,so we're returning the score only.
         return personalityScore;
+
 
     }
 }

@@ -3,6 +3,8 @@ package cli;
 import java.util.Scanner;
 
 public class BiodataPrompter {
+    public BiodataPrompter(Scanner scanner) {
+    }
 
     //separate function to prompt each section
 
@@ -18,11 +20,15 @@ public class BiodataPrompter {
 
     }
 
+    /*
+    //Rethink about this
     public String promptForUsername(){
         Scanner input = new Scanner(System.in);
         System.out.print("Enter a username. Must contain no spaces, or numbers: ");
         return input.nextLine().trim();
     }
+
+     */
 
     //add more constraints
     public String promptForEmail(){

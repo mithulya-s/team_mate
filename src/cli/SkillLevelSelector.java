@@ -4,9 +4,12 @@ import java.util.Scanner;
 
 public class SkillLevelSelector {
 
-    public int promptSkillLevel(int skillLevel) {
+    public SkillLevelSelector(Scanner surveyScanner) {
+    }
+
+    public int promptForSkillLevel() {
         Scanner sc = new Scanner(System.in);
-        skillLevel=0;
+        int skillLevel=0;
 
         //change this question to be more friendly
 //        System.out.print("Enter the skill level: ");

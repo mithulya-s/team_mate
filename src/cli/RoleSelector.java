@@ -6,6 +6,9 @@ import java.util.Scanner;
 
 public class RoleSelector {
 
+    public RoleSelector(Scanner surveyScanner) {
+    }
+
     public Role promptForRole(){
         Scanner sc = new Scanner(System.in);
         //to store the final result
