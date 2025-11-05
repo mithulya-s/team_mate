@@ -1,6 +1,7 @@
 package services;
 
 import base.Participant;
+import csv.ParticipantCsvWriter;
 
 import java.util.Scanner;
 
@@ -26,6 +27,9 @@ public class SurveyService {
         System.out.println("Please save this ID — you'll need it to view your team or log in later.");
         System.out.println("\nThank you. Have a wonderful day!");
 
-
+        ParticipantCsvWriter.saveParticipantToCsv(participant);
+        System.out.println("Response has been securely saved!");
     }
+
+
 }
