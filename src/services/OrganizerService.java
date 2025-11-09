@@ -25,31 +25,27 @@ public class OrganizerService {
                     System.out.println("Row " + warning.getRowNumber() + ": "
                             + String.join("; ", warning.getMessages()));
                 }
-            }
+        }
+        /* asked in the cli part
         if  (participants.isEmpty()) {
             System.out.println("No valid participants found. Please check the format and try again.");
 
         } else{
             System.out.println("Participant successfully loaded" + participants.size() + " participants.");
         }
+
+         */
+
+        System.out.println(" Loaded " + participants.size() + " valid participants.");
         return participants;
+
     }
 
-    // Get the returned particiapnts and build the teams with the size
-    //the size will be asked inside this
-    public List<List<Participant>> getFormedTeams(List<Participant> participants){
-        Scanner scanner= new Scanner(System.in); //for the size input
-        //Asking for the team size
-        System.out.println("Enter desired team size: ");
-        int desiredTeamSize = Integer.parseInt(scanner.nextLine().trim()); //since the size can't be zero
-        System.out.println("Getting formed teams from "+desiredTeamSize+" participants...");
-        List<List<Participant>> formedTeams= TeamBuilder.dummyFormation(participants,desiredTeamSize);
+    //wrapper for the breaking algo
+    public List<List<Participant>> callFormTeams(List<Participant> participants, int teamSize){
+        List<List<Participant>> formedTeams= TeamBuilder.formTeams(participants, teamSize);
         System.out.println("Teams formed "+formedTeams.size()+" teams.");
         return formedTeams;
     }
-
-    // The returned list must be sent back to the organzier cli, where it will be dispalyed with export (and also pass
-    // the team size from there to here)
-
-    //Options and other session metrics.
 }
+

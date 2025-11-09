@@ -3,6 +3,7 @@ package cli;
 import base.Participant;
 import csv.TeamsToCsvWriter;
 import services.OrganizerService;
+import utilities.TeamDisplayer;
 
 import java.util.List;
 import java.util.Scanner;
@@ -15,26 +16,56 @@ public class OrganizerInput {
     public OrganizerInput(Scanner scanner) {
         this.scanner = scanner;
     }
-    public void welcomeOrganizer() {
+    public void manageOrganizerFlow() {
         System.out.println("Welcome to Organizer CLI");
 
-        //Asking for the file
-        System.out.println("Enter file path for the participant records or press " +
-                "Enter to use the existing participant file:\n ");
-        String filePath = scanner.nextLine().trim();
+        //calling helper to file path
+        String filePath = promptForPath();
+        int teamSize=promptForTeamSize();
 
-        //if the file path is empty get the particiapnt csv file
-        if (filePath.isEmpty()) filePath="participants.csv";
-
-        //first load the participants and store it
         OrganizerService organizerService = new OrganizerService();
-        List<Participant> readParticipants= organizerService.loadParticipants(filePath);
+        List<Participant> compiledParticipants = organizerService.loadParticipants(filePath);
+
+        if (compiledParticipants.isEmpty()) {
+            System.out.println("No valid participants found. Exiting...");
+            return;
+        }
 
         //calling the team formation and getting the formed teams.
-        List<List<Participant>> formedTeams= organizerService.getFormedTeams(readParticipants);
+        List<List<Participant>> formedTeams= organizerService.callFormTeams(compiledParticipants,teamSize);
 
-        //callig the team dsipalyer for the initial display tot he cosole
-        displayTeams(formedTeams);
+        displayAndExportTeams(formedTeams); //for the last steps
+    }
+
+    //helper for path
+    private String promptForPath() {
+        System.out.println("Please enter the path to the participants records " +
+                "or press Enter to use the default.");
+        String inp= scanner.nextLine().trim();
+        return inp.isEmpty()? "participants.csv" : inp;
+    }
+
+    //helper for size
+    private int promptForTeamSize() {
+        System.out.println("Enter the desired team size: ");
+        while (true) {
+            try {
+                int teamSize = Integer.parseInt(scanner.nextLine().trim()); //since no zero
+                if (teamSize>0) {
+                    return teamSize;
+                }
+                System.out.println("Team size must be greater than zero. Try again: ");
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Invalid value for team size. Try again: ");
+            }
+        }
+    }
+
+
+    //separate function to calling the team dispaly and exporting orchestration
+    public void displayAndExportTeams(List<List<Participant>> formedTeams) {
+        TeamDisplayer.displayTeams(formedTeams);
 
         //Asking whether he wants it imported.
         System.out.print("Would you like to export these teams to a CSV file? (Y/N): ");
@@ -44,9 +75,5 @@ public class OrganizerInput {
             TeamsToCsvWriter.writeTeamsToCsv(formedTeams);
             System.out.println("Formed Teams written to CSV file successfully.");
         }
-
-
-
     }
-
 }
