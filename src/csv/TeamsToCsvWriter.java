@@ -36,7 +36,7 @@ public class TeamsToCsvWriter {
                     );
                 }
             }
-            System.out.println("\n Teams successfully written to " + FILENAME);
+            System.out.println("\n Formed teams successfully written to CSV file named: " + FILENAME + ".");
         }
         catch(IOException e){
             System.out.println("Error writing teams to file:  " + e.getMessage());
