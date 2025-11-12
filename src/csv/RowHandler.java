@@ -31,13 +31,21 @@ public class RowHandler {
 
         // To check if the line is valid finally
         public boolean isValidLine() {
-            return ((participant != null) || (!warnings.isEmpty()));
+            return ((participant != null) && (warnings.isEmpty()));
         }
 
     }
 
     public Result readRow(String[] line) {
-        List<String> warnings = new ArrayList<>();
+        //debugs
+        System.out.println("DEBUG: Parsing row with " + line.length + " columns");
+        for (int i = 0; i < line.length; i++) {
+            System.out.println("  Column " + i + ": '" + line[i] + "'");
+        }
+
+
+
+            List<String> warnings = new ArrayList<>();
 
         Participant dummy=parseRow(line,warnings);
         if (dummy==null) {
