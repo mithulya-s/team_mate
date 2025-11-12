@@ -10,7 +10,12 @@ public class PersonalityClassifier {
             return  PersonalityType.BALANCED;
         } else if (score <= 69 && score >= 50) {
             return  PersonalityType.THINKER;
-        } else return null; //add the other ones
+        } else if (score < 50 && score >= 0) {
+            return  PersonalityType.SUPPORTER;
+        } else {
+            return null;
+        }
+
     }
 }
 
