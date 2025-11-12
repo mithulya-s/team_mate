@@ -50,6 +50,9 @@ public class TeamBuilder {
         //keep role constrsints
         RoleDiversifier.enforceRoleDiversity(teams,teamSize);
 
+        //added this to hide the empty teams from being returned
+        teams.removeIf(List::isEmpty);
+
         return teams;
 
 

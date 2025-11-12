@@ -12,7 +12,7 @@ public class TeamDisplayer {
 
         for (int i = 0; i<formedTeams.size(); i++){
             List<Participant> team = formedTeams.get(i);
-            System.out.print("Team " + (i+1) + ": ");
+            System.out.print("Team " + (i+1) + ": \n");
 
             for (Participant p : team){
                 System.out.printf("%s,%s,%s,%s,%d,%s,%d,%s%n",
