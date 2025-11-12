@@ -14,7 +14,7 @@ public class InterestDiversifier {
 
             for (Participant p:team){
                 Interest interest=p.getInterest();
-                interestCount.put(interest,interestCount.getOrDefault(interest,null)+1);
+                interestCount.put(interest,interestCount.getOrDefault(interest,0)+1);
             }
             for (Map.Entry<Interest,Integer> entry:interestCount.entrySet()){
                 if (entry.getValue()>2){
