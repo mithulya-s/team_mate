@@ -32,7 +32,10 @@ public class ParticipantLookupCli {
                     "Please verify ID and try again.");
 
         }else {
-            System.out.println(" You are in team: " + (formedTeams.indexOf(assignedTeam) + 1) + " with:\");\n");
+            int teamNumber= formedTeams.indexOf(assignedTeam)+1;
+            System.out.println("\n You are in Team " + teamNumber + " with:");
+
+
             for (Participant p : assignedTeam) {
                 System.out.printf("  - %s (%s, %s)\n",
                         p.getFullName(),
