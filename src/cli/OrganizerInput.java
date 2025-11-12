@@ -16,7 +16,7 @@ public class OrganizerInput {
     public OrganizerInput(Scanner scanner) {
         this.scanner = scanner;
     }
-    public void manageOrganizerFlow() {
+    public List<List<Participant>> manageOrganizerFlow() {
         System.out.println("Welcome to Organizer CLI");
 
         //calling helper to file path
@@ -28,13 +28,15 @@ public class OrganizerInput {
 
         if (compiledParticipants.isEmpty()) {
             System.out.println("No valid participants found. Exiting...");
-            return;
+            return null;
         }
 
         //calling the team formation and getting the formed teams.
         List<List<Participant>> formedTeams= organizerService.callFormTeams(compiledParticipants,teamSize);
 
         displayAndExportTeams(formedTeams); //for the last steps
+
+        return formedTeams;
     }
 
     //helper for path
@@ -73,7 +75,9 @@ public class OrganizerInput {
 
         if (exportInp.equals("y")) {
             TeamsToCsvWriter.writeTeamsToCsv(formedTeams);
-            System.out.println("Formed Teams written to CSV file successfully.");
+
+            //redundant sentence so removed it.
+            //System.out.println("Formed Teams written to CSV file successfully.");
         }
     }
 }
