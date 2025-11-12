@@ -37,10 +37,18 @@ public class ParticipantLookupCli {
 
 
             for (Participant p : assignedTeam) {
-                System.out.printf("  - %s (%s, %s)\n",
-                        p.getFullName(),
-                        p.getRole(),
-                        p.getInterest());
+                //highlight the one who looked for and show the others
+                if (p.getId().equalsIgnoreCase(participantId)) {
+                    System.out.printf(" %s (YOU) - %s, %s\n",
+                            p.getFullName(),
+                            p.getRole(),
+                            p.getInterest());
+                } else {
+                    System.out.printf("  - %s (%s, %s)\n",
+                            p.getFullName(),
+                            p.getRole(),
+                            p.getInterest());
+                }
             }
         }
 
