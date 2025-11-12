@@ -8,6 +8,4 @@ public enum Interest {
     DOTA,
     CHESS,
     BASKETBALL;
-
-
 }
