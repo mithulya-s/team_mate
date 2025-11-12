@@ -8,12 +8,17 @@ import java.util.Scanner;
 
 public class ParticipantLookupCli {
     private final Scanner scanner;
+    private List<List<Participant>> formedTeams; //internal state to check
 
     public ParticipantLookupCli(Scanner scanner) {
         this.scanner = scanner;
     }
 
-    public void manageLookupFlow(List<List<Participant>> formedTeams) {
+    public void setFormedTeams(List<List<Participant>> formedTeams) {
+        this.formedTeams = formedTeams;
+    }
+
+    public void manageLookupFlow() {
         System.out.println("Welcome to participant search.");
 
         if (formedTeams == null || formedTeams.isEmpty()) {
@@ -25,6 +30,7 @@ public class ParticipantLookupCli {
         String participantId = scanner.nextLine().trim();
 
         ParticipantLookup lookupFunctions = new ParticipantLookup();
+        Participant participant_details=lookupFunctions.findParticipantById(participantId, formedTeams);
         List<Participant> assignedTeam = lookupFunctions.findTeamByParticipant(participantId, formedTeams);
 
         if (assignedTeam==null){
