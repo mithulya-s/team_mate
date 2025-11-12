@@ -50,6 +50,7 @@ public class ParticipantLookupCli {
                             p.getInterest());
                 }
             }
+            System.out.println("\n"); //for niceness.
         }
 
     }
