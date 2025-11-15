@@ -8,7 +8,7 @@ import utilities.TeamDisplayer;
 import java.util.List;
 import java.util.Scanner;
 
-import static utilities.TeamDisplayer.displayTeams;
+
 
 public class OrganizerInput {
     private final Scanner scanner;
@@ -34,7 +34,7 @@ public class OrganizerInput {
         //calling the team formation and getting the formed teams.
         List<List<Participant>> formedTeams= organizerService.callFormTeams(compiledParticipants,teamSize);
 
-        displayAndExportTeams(formedTeams); //for the last steps
+        displayAndExportTeams(formedTeams); //for the last steps, no instance because in the same class
 
         return formedTeams;
     }
