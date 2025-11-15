@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static List<List<Participant>> formedTeams; // shared state
+    private static List<List<Participant>> formedTeams; // shared single state
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -20,14 +20,14 @@ public class Main {
             System.out.println("2. Organizer");
             System.out.println("0. Exit");
 
-            int choice = processChoice(scanner, 2);
+            int choice = processChoice(scanner);
 
             if (choice == 1) {
                 initiateParticipantFlow(scanner);
             } else if (choice == 2) {
                 initiateOrganizerFlow(scanner);
             } else {
-                System.out.println("👋 Exiting. See you next time!");
+                System.out.println("Exiting. See you next time!");
                 break;
             }
         }
@@ -42,15 +42,14 @@ public class Main {
             System.out.println("2. Lookup assigned team");
             System.out.println("0. Back to main menu");
 
-            int choice = processChoice(scanner, 2);
+            int choice = processChoice(scanner);
 
             if (choice == 1) {
                 SurveyService surveyService = new SurveyService(scanner);
                 surveyService.initiateSurvey(); // assuming this method exists
             } else if (choice == 2) {
                 ParticipantLookupCli lookupCli = new ParticipantLookupCli(scanner);
-                lookupCli.setFormedTeams(formedTeams); // inject team state
-                lookupCli.manageLookupFlow();
+                lookupCli.manageLookupFlow(formedTeams);
             } else {
                 break;
             }
@@ -66,7 +65,7 @@ public class Main {
             System.out.println("2. Export formed teams");
             System.out.println("0. Back to main menu");
 
-            int choice = processChoice(scanner, 2);
+            int choice = processChoice(scanner);
 
             if (choice == 1) {
                 formedTeams = orgInput.manageOrganizerFlow(); // store teams
@@ -82,13 +81,13 @@ public class Main {
         }
     }
 
-    private static int processChoice(Scanner scanner, int maxOption) {
+    private static int processChoice(Scanner scanner) {
         while (true) {
             System.out.print("Enter your choice: ");
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
-                if (choice >= 0 && choice <= maxOption) return choice;
-                System.out.println("Invalid choice. Please enter a number between 0 and " + maxOption + ".");
+                if (choice >= 0 && choice <= 2) return choice;
+                System.out.println("Invalid choice. Please enter a number between 0 and " + 2 + ".");
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
