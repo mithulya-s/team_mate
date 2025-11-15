@@ -3,27 +3,64 @@ package cli;
 import java.util.Scanner;
 
 public class SkillLevelSelector {
+    private final Scanner scanner;
+    private static final int MIN_EXP_LEVEL=1;
+    private static final int MAX_EXP_LEVEL=10;
 
-    public SkillLevelSelector(Scanner surveyScanner) {
+    public SkillLevelSelector(Scanner scanner) {
+        this.scanner = scanner;
     }
 
     public int promptForSkillLevel() {
-        Scanner sc = new Scanner(System.in);
-        int skillLevel=0;
+        System.out.println("=======================================================");
+        System.out.println("              SKILL LEVEL ASSESSMENT                   ");
+        System.out.println("=======================================================");
+        System.out.println("Rate your experience level:");
+        System.out.println("  1-3   : Beginner");
+        System.out.println("  4-6   : Intermediate");
+        System.out.println("  7-8   : Advanced");
+        System.out.println("  9-10  : Expert");
+        System.out.println("=======================================================");
 
-        //change this question to be more friendly
-//        System.out.print("Enter the skill level: ");
-//        skillLevel = sc.nextInt();
+        while(true) {
+            System.out.print("Enter an experience level (1-10) : ");
+            String userInp = scanner.nextLine().trim();
 
-        while (skillLevel < 1 || skillLevel > 10) {
-            System.out.println("Rate your level of experience. (Between 1 to 10) : ");
-            skillLevel = sc.nextInt();
+            //validations
+            if (userInp.isEmpty()) {
+                System.out.println("Please enter a value between 1 and 10.");
+                continue;
+            }
 
-            if (skillLevel < 1 || skillLevel > 10) {
-                System.out.println("Invalid input. Please enter a number between 1 and 10: ");
+            //trying to parse the int
+            try{
+                int skillLevel = Integer.parseInt(userInp);
+                if (skillLevel < MIN_EXP_LEVEL || skillLevel > MAX_EXP_LEVEL) {
+                    System.out.println("Invalid range. Please enter a value between 1 and 10.");
+                    continue;
+                }
+
+                // show confirmation
+                String band=classifySkillLevel(skillLevel);
+                System.out.println("Skill Level: "+skillLevel+" ("+band+")\n");
+
+                return skillLevel;
+
+            }catch (NumberFormatException e){
+                System.out.println("Invalid Input. Please enter a value between 1 and 10.");
             }
         }
-        return skillLevel;
+    }
 
+    //helper to map the val to category
+    private String classifySkillLevel(int skillLevel) {
+        if (skillLevel<=3){
+            return "Beginner";
+        }else if (skillLevel<=6){
+            return "Intermediate";
+        }else if (skillLevel<=8){
+            return "Advanced";
+        }else
+            return "Expert";
     }
 }
