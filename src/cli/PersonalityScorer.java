@@ -1,41 +1,76 @@
 package cli;
 
-import utilities.PersonalityClassifier;
-import utilities.PersonalityType;
-
 import java.util.Scanner;
 
 public class PersonalityScorer {
-    public PersonalityScorer(Scanner surveyScanner) {
+    private final Scanner scanner;
+    private static final int NUM_OF_QUESTIONS = 5;
+    private static final int MAX_Q_SCORE=5;
+    private static final int MIN_Q_SCORE=1;
+
+    public PersonalityScorer(Scanner scanner) {
+        this.scanner = scanner;
     }
 
     public int promptForPersonality() {
-        Scanner sc = new Scanner(System.in);
-        int score =0;
+        int rawScore =0;
 
-        System.out.println("Please answer the following questions: ");
+        System.out.println("\n📋 Personality Assessment");
+        System.out.println("Please answer the following questions on a value of 1-5:");
+        System.out.println("(1 = Strongly Disagree, 5 = Strongly Agree)\n");
 
-        //looping and calcualting the total
-        for (int i = 1; i <= 5; i++) {
-            System.out.print("Question " + i + ": ");
-            int answer = sc.nextInt();
-            while (answer <1 || answer > 5) {
-                System.out.println("Invalid answer. Please enter a number between 1 and 5");
-                answer = sc.nextInt();
-            }
-            //if the answer is correct, addign to the total
-            score += answer;
+        // The questions stored in an array since it's fixed
+        String[] questionList={
+                "I enjoy taking charge and leading others",
+                "I prefer working collaboratively in a team",
+                "I analyze situations carefully before acting",
+                "I adapt easily to changing circumstances",
+                "I support and encourage my teammates"
+        };
+
+        //displaying the questions
+        for (int i = 0; i < NUM_OF_QUESTIONS; i++) {
+            System.out.println("Question " + (i + 1) + ":" +  questionList[i]);
+            int ans=promptForAnswer(i+1);
+            rawScore+=ans;
         }
-        //normalizing the score for the final score
-        int personalityScore = score*4;
 
+        //final score
+        int totalScore=(rawScore*4);
 
-        //Assigning the personality score
-        PersonalityType personality = PersonalityClassifier.classifyPersonalityType(personalityScore);
+        System.out.println("Personality Assessment completed!");
+        System.out.println("Your score: " + totalScore + "/100\n");
 
         //no need to return the persoality type since the class returns from the top,so we're returning the score only.
-        return personalityScore;
+        return totalScore;
+    }
 
+    //Helper
+    private int promptForAnswer(int questionNumber) {
+        while (true){
+            System.out.print("Enter your answer (1-5): ");
+            String answerStr =scanner.nextLine().trim();
 
+            //validations for the entered values
+            if (answerStr.isEmpty()){
+                System.out.println("Invalid input.Please enter a number between 1-5.");
+                continue;
+            }
+
+            //trying to get the int to go, to convert the string
+            try{
+                int ansValue =Integer.parseInt(answerStr);
+
+                //validation
+                if (ansValue < MIN_Q_SCORE || ansValue > MAX_Q_SCORE){
+                    System.out.println("Invalid input. Please enter a number between 1-5.");
+                    continue;
+                }
+                return ansValue;
+
+            }catch(NumberFormatException e){
+                System.out.println("Invalid input. Please enter a number between 1-5.");
+            }
+        }
     }
 }
