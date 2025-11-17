@@ -1,6 +1,8 @@
 package csv;
 
 import base.Participant;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProcessCsvResult {
@@ -12,8 +14,8 @@ public class ProcessCsvResult {
     private final List<CsvRowWarning> warnings; //Stroing the issues caught when reading the file
 
     public ProcessCsvResult(List<Participant> validParticipants, List<CsvRowWarning> warnings) {
-        this.validParticipants = validParticipants;
-        this.warnings = warnings;
+        this.validParticipants = validParticipants != null ? validParticipants : new ArrayList<>();
+        this.warnings = warnings != null ? warnings : new ArrayList<>();
     }
 
     //Getters
@@ -22,5 +24,14 @@ public class ProcessCsvResult {
     }
     public List<CsvRowWarning> getWarnings() {
         return warnings;
+    }
+
+
+    public boolean hasWarnings() {
+        return !warnings.isEmpty();
+    }
+
+    public boolean hasValidParticipants() {
+        return !validParticipants.isEmpty();
     }
 }
