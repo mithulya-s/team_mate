@@ -49,7 +49,7 @@ public class InterestSelector {
         System.out.println("1 - FIFA");
         System.out.println("2 - CS:GO");
         System.out.println("3 - Valorant");
-        System.out.println("4 - Dota");
+        System.out.println("4 - Dota 2");
         System.out.println("5 - Chess");
         System.out.println("6 - Basketball");
         System.out.println("-------------------------------------------------------");
@@ -62,7 +62,7 @@ public class InterestSelector {
             case 1 -> Interest.FIFA;
             case 2 -> Interest.CSGO;
             case 3 -> Interest.VALORANT;
-            case 4 -> Interest.DOTA;
+            case 4 -> Interest.DOTA2;
             case 5 -> Interest.CHESS;
             case 6 -> Interest.BASKETBALL;
             default -> null;
