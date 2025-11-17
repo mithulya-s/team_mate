@@ -22,7 +22,7 @@ public class ParticipantCreator {
         try{
 
             //Generate the automatic participantId and store it
-            String participantId = IdGenerator.generateId();
+            String participantId = IdGenerator.getInstance().generateNextId();
 
 
             BiodataPrompter biodataPrompter = new BiodataPrompter(surveyScanner);
