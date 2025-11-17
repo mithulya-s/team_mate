@@ -1,82 +1,114 @@
 package utilities;
 
-import cli.ParticipantLookupCli;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Random;
+
 
 public class IdGenerator {
-    //Upgrade to iterate with the CSV later. After the decison of DB has been done
-    private static final String FILE_PATH="participants.csv";
-    private static final String PREFIX="P";
+    // Singleton instance therefore one instance
+    private static IdGenerator instance;
 
-    public static String generateId(){
-        int maxId=findMaxId();
-        int nextId=maxId+1;
-        return String.format("%s%03d", PREFIX, nextId);
+
+    private static final String FILE_PATH = "participants.csv";
+    private static final String PREFIX = "P";
+
+
+    private int lastGeneratedId;
+
+
+    private IdGenerator() {
+        this.lastGeneratedId = findMaxIdFromFile();
     }
 
-    private static int findMaxId(){
+    public static synchronized IdGenerator getInstance() {
+        if (instance == null) {
+            instance = new IdGenerator();
+        }
+        return instance;
+    }
+
+
+    public synchronized String generateNextId() {
+        lastGeneratedId++;
+        return String.format("%s%03d", PREFIX, lastGeneratedId);
+    }
+
+    public int getCurrentMaxId() {
+        return lastGeneratedId;
+    }
+
+
+    public synchronized void reset() {
+        this.lastGeneratedId = 0;
+    }
+
+
+    public synchronized void refresh() {
+        int fileMaxId = findMaxIdFromFile();
+        if (fileMaxId > lastGeneratedId) {
+            lastGeneratedId = fileMaxId;
+        }
+    }
+
+
+    private int findMaxIdFromFile() {
         File file = new File(FILE_PATH);
 
-        //if it doesnt' exist
-        if (!file.exists()){
+        if (!file.exists()) {
             return 0;
         }
-        int maxId=0;
 
-        //reading the file for the last number
-        try (BufferedReader br = new BufferedReader(new FileReader(file))){
+        int maxId = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            boolean isHeaderLine=true;
+            boolean isHeaderLine = true;
 
-            while ((line=br.readLine())!=null){
-                //skip header line
-                if (isHeaderLine){
-                    isHeaderLine=false;
+            while ((line = br.readLine()) != null) {
+                // Skip header
+                if (isHeaderLine) {
+                    isHeaderLine = false;
                     continue;
                 }
 
-                if (line.trim().isEmpty()){
+                if (line.trim().isEmpty()) {
                     continue;
                 }
 
-                //get the id from the line
+                // Extract ID from first column
                 String[] cols = line.split(",");
-                if (cols.length>0){
-                    String id=cols[0].trim();
-                    int idNum=extractIdNum(id);
-                    if (idNum>maxId){
-                        maxId=idNum;
+                if (cols.length > 0) {
+                    String id = cols[0].trim();
+                    int idNum = extractIdNumber(id);
+                    if (idNum > maxId) {
+                        maxId = idNum;
                     }
                 }
             }
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Warning: Could not read participant file for ID generation. Starting from P001.");
             System.err.println("Error: " + e.getMessage());
             return 0;
         }
+
         return maxId;
     }
 
-    //helper to extract num
-    private static int extractIdNum(String id) {
+
+    private int extractIdNumber(String id) {
         if (id == null || id.trim().isEmpty()) {
             return 0;
         }
 
-        //ditch the prefix
         if (id.startsWith(PREFIX)) {
             String numPart = id.substring(PREFIX.length());
 
             try {
                 return Integer.parseInt(numPart);
             } catch (NumberFormatException e) {
-                System.err.println("Invalid ID form detected: " + id);
+                System.err.println("Invalid ID format detected: " + id);
                 return 0;
             }
         }
