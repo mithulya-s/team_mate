@@ -5,7 +5,7 @@ public enum Interest {
     FIFA,
     CSGO,
     VALORANT,
-    DOTA,
+    DOTA2,
     CHESS,
     BASKETBALL;
 }
