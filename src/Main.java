@@ -1,5 +1,5 @@
 import base.Participant;
-import cli.OrganizerInput;
+import cli.OrganizerCli;
 import cli.ParticipantLookupCli;
 import services.SurveyService;
 
@@ -57,12 +57,12 @@ public class Main {
     }
 
     private static void initiateOrganizerFlow(Scanner scanner) {
-        OrganizerInput orgInput = new OrganizerInput(scanner);
+        OrganizerCli orgInput = new OrganizerCli(scanner);
 
         while (true) {
             System.out.println("\n🛠️ Organizer Menu");
-            System.out.println("1. Upload participant file and form teams");
-            System.out.println("2. Export formed teams");
+            System.out.println("1. Upload participant records and form teams");
+            System.out.println("2. View formed teams");
             System.out.println("0. Back to main menu");
 
             int choice = processChoice(scanner);
