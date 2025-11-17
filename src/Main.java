@@ -2,6 +2,7 @@ import base.Participant;
 import cli.OrganizerCli;
 import cli.ParticipantLookupCli;
 import services.SurveyService;
+import utilities.Authenticator;
 
 import java.util.List;
 import java.util.Scanner;
@@ -57,6 +58,16 @@ public class Main {
     }
 
     private static void initiateOrganizerFlow(Scanner scanner) {
+        Authenticator auth = Authenticator.getInstance();
+
+        if (!auth.isAuthenticated()) {
+            boolean loginSuccess = auth.login(scanner);
+            if (!loginSuccess) {
+                System.out.println("Authentication failed. Returning to main menu.");
+                return;
+            }
+        }
+
         OrganizerCli orgInput = new OrganizerCli(scanner);
 
         while (true) {
@@ -71,11 +82,14 @@ public class Main {
                 formedTeams = orgInput.manageOrganizerFlow(); // store teams
             } else if (choice == 2) {
                 if (formedTeams == null || formedTeams.isEmpty()) {
-                    System.out.println("❌ No teams formed yet. Please form teams first.");
+                    System.out.println("No teams formed yet. Please form teams first.");
                 } else {
                     orgInput.displayAndExportTeams(formedTeams);
                 }
-            } else {
+            } else if (choice==3) {
+                auth.logout();
+                break;
+            }else {
                 break;
             }
         }
