@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class TeamBuilder {
+public class TeamBuilderAlgorithm {
     private static final int TEAM_INTEREST_CAP = 2;
     private static final int MIN_ROLES_FOR_BIG_TEAMS = 3;
 

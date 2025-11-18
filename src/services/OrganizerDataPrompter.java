@@ -7,9 +7,42 @@ import csv.ProcessCsvResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class OrganizerService {
+public class OrganizerDataPrompter {
+    private final Scanner scanner;
     private final ParticipantCsvReader fileReader = new ParticipantCsvReader();
+
+    public OrganizerDataPrompter(Scanner scanner) {
+        this.scanner = scanner;
+    }
+
+    //helper for path
+    public String promptForPath() {
+        while (true) {
+            System.out.print("Enter the path to participant records (or press Enter to use default file): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.isEmpty()) {
+                String defaultFile = "participants.csv";
+                System.out.println("✅ Using default file: " + defaultFile);
+                return defaultFile;
+            }
+
+            if (input.length() < 3) {
+                System.out.println("File path is too short. Please enter a valid file path.\n");
+                continue;
+            }
+
+            if (!input.toLowerCase().endsWith(".csv")) {
+                System.out.println(" Warning: File doesn't have .csv extension. Continuing anyway...");
+            }
+
+            return input;
+        }
+
+    }
+
 
     public List<Participant> loadParticipants(String filePath) {
         if (filePath == null || filePath.trim().isEmpty()) {
@@ -58,63 +91,5 @@ public class OrganizerService {
         }
     }
 
-    public List<List<Participant>> callFormTeams(List<Participant> participants, int teamSize) {
-        if (participants == null || participants.isEmpty()) {
-            System.err.println("❌ Error: No participants provided for team formation.");
-            return new ArrayList<>();
-        }
 
-        if (teamSize <= 0) {
-            System.err.println("❌ Error: Invalid team size (" + teamSize + ").");
-            return new ArrayList<>();
-        }
-
-        if (participants.size() < teamSize) {
-            System.out.println("⚠️  Warning: Not enough participants (" + participants.size()
-                    + ") to form a complete team of size " + teamSize + ".");
-        }
-
-        System.out.println("\n⚙️  Forming teams...");
-
-        try {
-            TeamBuilder.TeamFormationResult result = TeamBuilder.formTeams(participants, teamSize);
-
-            if (result == null) {
-                System.err.println("❌ Team formation returned null result.");
-                return new ArrayList<>();
-            }
-
-            List<List<Participant>> formedTeams = result.getFormedTeams();
-
-            if (formedTeams == null || formedTeams.isEmpty()) {
-                System.err.println("❌ Team formation failed. No teams created.");
-
-                if (result.hasPooledParticipants()) {
-                    System.out.println("ℹ️  All " + result.getPooledParticipants().size()
-                            + " participant(s) were pooled (insufficient for complete teams).");
-                }
-
-                return new ArrayList<>();
-            }
-
-            System.out.println("✅ Successfully formed " + formedTeams.size() + " team(s).");
-
-            if (result.hasPooledParticipants()) {
-                List<Participant> pooled = result.getPooledParticipants();
-                System.out.println("\n⚠️  " + pooled.size() + " participant(s) pooled (not assigned to teams):");
-                for (Participant p : pooled) {
-                    System.out.println("    • " + p.getId() + " - " + p.getFullName());
-                }
-                System.out.println();
-            }
-
-            return formedTeams;
-
-        } catch (Exception e) {
-            System.err.println("\n❌ Error during team formation:");
-            System.err.println("   " + e.getMessage());
-            System.out.println("💡 Please check participant data and try again.\n");
-            return new ArrayList<>();
-        }
-    }
 }

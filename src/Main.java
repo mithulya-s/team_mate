@@ -68,23 +68,24 @@ public class Main {
             }
         }
 
-        OrganizerCli orgInput = new OrganizerCli(scanner);
+        OrganizerCli orgCli = new OrganizerCli(scanner);
 
         while (true) {
             System.out.println("\n🛠️ Organizer Menu");
             System.out.println("1. Upload participant records and form teams");
             System.out.println("2. View formed teams");
+            //System.out.println("3. Logout");
             System.out.println("0. Back to main menu");
 
             int choice = processChoice(scanner);
 
             if (choice == 1) {
-                formedTeams = orgInput.manageOrganizerFlow(); // store teams
+                formedTeams = orgCli.manageOrganizerFlow(); // store teams
             } else if (choice == 2) {
                 if (formedTeams == null || formedTeams.isEmpty()) {
                     System.out.println("No teams formed yet. Please form teams first.");
                 } else {
-                    orgInput.displayAndExportTeams(formedTeams);
+                    orgCli.displayAndExportTeams(formedTeams);
                 }
             } else if (choice==3) {
                 auth.logout();
