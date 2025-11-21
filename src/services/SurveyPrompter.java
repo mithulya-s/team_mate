@@ -21,6 +21,7 @@ public class SurveyPrompter {
         this.scanner = scanner;
     }
 
+
     //Biodata section
     public String promptForFullName(){
         while (true) {

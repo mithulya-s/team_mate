@@ -41,35 +41,6 @@ public class SurveyService {
             Role selectedRole=prompter.promptForRole();
 
 
-            /*
-            //Build the particiapnt
-            try {
-                return new Participant(
-                        participantId,
-                        enteredFullName,
-                        enteredEmail,
-                        selectedInterest,
-                        selectedSkillLevel,
-                        selectedRole,
-                        score,
-                        personalityType);
-
-            } catch (IllegalArgumentException e) {
-                //Participant constructor failed
-                System.err.println("\n❌ Participant validation failed:");
-                System.err.println("   " + e.getMessage());
-                throw e; // Re-throw to be handled by SurveyService
-            }
-
-
-            /*
-            //Create the participant
-            ParticipantCreator builder=new ParticipantCreator(scanner);
-            Participant participant=builder.buildParticipant();
-
-
-             */
-
             //Build the particapnt
             Participant participant= new Participant(
                     participantId,
