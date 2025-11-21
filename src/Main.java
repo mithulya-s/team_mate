@@ -1,6 +1,6 @@
 import base.Participant;
-import cli.OrganizerCli;
-import cli.ParticipantLookupCli;
+import services.OrganizerService;
+import services.ParticipantLookup;
 import services.SurveyService;
 import utilities.Authenticator;
 
@@ -47,10 +47,10 @@ public class Main {
 
             if (choice == 1) {
                 SurveyService surveyService = new SurveyService(scanner);
-                surveyService.initiateSurvey(); // assuming this method exists
+                surveyService.initiateSurvey();
             } else if (choice == 2) {
-                ParticipantLookupCli lookupCli = new ParticipantLookupCli(scanner);
-                lookupCli.manageLookupFlow(formedTeams);
+                ParticipantLookup searcher = new ParticipantLookup(scanner);
+                searcher.manageLookupFlow(formedTeams);
             } else {
                 break;
             }
@@ -68,13 +68,12 @@ public class Main {
             }
         }
 
-        OrganizerCli orgCli = new OrganizerCli(scanner);
+        OrganizerService orgCli = new OrganizerService(scanner);
 
         while (true) {
             System.out.println("\n🛠️ Organizer Menu");
             System.out.println("1. Upload participant records and form teams");
             System.out.println("2. View formed teams");
-            //System.out.println("3. Logout");
             System.out.println("0. Back to main menu");
 
             int choice = processChoice(scanner);
@@ -87,10 +86,7 @@ public class Main {
                 } else {
                     orgCli.displayAndExportTeams(formedTeams);
                 }
-            } else if (choice==3) {
-                auth.logout();
-                break;
-            }else {
+            } else {
                 break;
             }
         }
@@ -104,7 +100,7 @@ public class Main {
                 if (choice >= 0 && choice <= 2) return choice;
                 System.out.println("Invalid choice. Please enter a number between 0 and " + 2 + ".");
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
+                System.out.println("Invalid input. Please enter a number between 0 and " + 2 + ".");
             }
         }
     }
