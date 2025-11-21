@@ -9,12 +9,8 @@ import java.io.IOException;
 public class IdGenerator {
     // Singleton instance therefore one instance
     private static IdGenerator instance;
-
-
     private static final String FILE_PATH = "participants.csv";
     private static final String PREFIX = "P";
-
-
     private int lastGeneratedId;
 
 
@@ -29,7 +25,6 @@ public class IdGenerator {
         return instance;
     }
 
-
     public synchronized String generateNextId() {
         lastGeneratedId++;
         return String.format("%s%03d", PREFIX, lastGeneratedId);
@@ -39,12 +34,11 @@ public class IdGenerator {
         return lastGeneratedId;
     }
 
-
     public synchronized void reset() {
         this.lastGeneratedId = 0;
     }
 
-
+    /*
     public synchronized void refresh() {
         int fileMaxId = findMaxIdFromFile();
         if (fileMaxId > lastGeneratedId) {
@@ -52,6 +46,7 @@ public class IdGenerator {
         }
     }
 
+     */
 
     private int findMaxIdFromFile() {
         File file = new File(FILE_PATH);
