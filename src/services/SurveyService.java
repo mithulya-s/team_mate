@@ -2,6 +2,10 @@ package services;
 
 import base.Participant;
 import csv.ParticipantCsvWriter;
+import utilities.IdGenerator;
+import utilities.Interest;
+import utilities.PersonalityType;
+import utilities.Role;
 
 import java.util.Scanner;
 
@@ -18,13 +22,70 @@ public class SurveyService {
                 "to help us assign you to the best team!\n");
 
         try{
+            //generate ID
+            String participantId = IdGenerator.getInstance().generateNextId();
+
+            //prmopter instance
+            SurveyPrompter prompter = new SurveyPrompter(scanner);
+
+            //Get the inputs
+            String enteredFullName =prompter.promptForFullName();
+            String enteredEmail =prompter.promptForEmail();
+
+            //PersonalityScorer personalityScorer = new PersonalityScorer(scanner);
+            int score=prompter.promptForPersonality();
+            PersonalityType personalityType= prompter.classifyPersonalityType(score);
+
+            Interest selectedInterest = prompter.promptForInterest();
+            int selectedSkillLevel =prompter.promptForSkillLevel();
+            Role selectedRole=prompter.promptForRole();
+
+
+            /*
+            //Build the particiapnt
+            try {
+                return new Participant(
+                        participantId,
+                        enteredFullName,
+                        enteredEmail,
+                        selectedInterest,
+                        selectedSkillLevel,
+                        selectedRole,
+                        score,
+                        personalityType);
+
+            } catch (IllegalArgumentException e) {
+                //Participant constructor failed
+                System.err.println("\n❌ Participant validation failed:");
+                System.err.println("   " + e.getMessage());
+                throw e; // Re-throw to be handled by SurveyService
+            }
+
+
+            /*
             //Create the participant
             ParticipantCreator builder=new ParticipantCreator(scanner);
             Participant participant=builder.buildParticipant();
 
+
+             */
+
+            //Build the particapnt
+            Participant participant= new Participant(
+                    participantId,
+                    enteredFullName,
+                    enteredEmail,
+                    selectedInterest,
+                    selectedSkillLevel,
+                    selectedRole,
+                    score,
+                    personalityType);
+
             //Try to save it to CSV
             try{
-                ParticipantCsvWriter.saveParticipantToCsv(participant);
+                ParticipantCsvWriter writer = new ParticipantCsvWriter();
+                writer.saveParticipantToCsv(participant);
+
 
                 //Sucess with writing the participant to the CSV
                 System.out.println("\n✅ Survey completed successfully!");
