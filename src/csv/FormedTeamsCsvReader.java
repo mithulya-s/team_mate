@@ -10,10 +10,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class FormedTeamsCsvReader {
+public class FormedTeamsCsvReader implements  CsvReadable<List<List<Participant>>> {
     private static final String FILE_PATH = "formed_teams.csv";
 
-    public static List<List<Participant>> readFormedTeams() throws IOException {
+    @Override
+    public List<List<Participant>> readFromCsv(String filePath) {
         Map<Integer, List<Participant>> teamMap = new LinkedHashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
@@ -46,9 +47,15 @@ public class FormedTeamsCsvReader {
 
                 teamMap.computeIfAbsent(teamNumber, k -> new ArrayList<>()).add(participant);
             }
+        } catch (IOException e) {
+            System.err.println("❌ Error reading formed teams CSV: " + e.getMessage());
         }
-
-        // Convert map to list of teams in order
         return new ArrayList<>(teamMap.values());
     }
+
+    //to use the def path
+    public List<List<Participant>> readDefaultFile() {
+        return readFromCsv(FILE_PATH);
+    }
+
 }
