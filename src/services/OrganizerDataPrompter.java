@@ -53,7 +53,7 @@ public class OrganizerDataPrompter {
         System.out.println("\n📂 Loading participants from: " + filePath + "...");
 
         try {
-            ProcessCsvResult result = fileReader.readFile(filePath);
+            ProcessCsvResult result = fileReader.readFromCsv(filePath);
 
             if (result == null) {
                 System.err.println("❌ Error: Failed to read file.");

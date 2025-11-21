@@ -4,7 +4,6 @@ import base.Participant;
 import csv.TeamsToCsvWriter;
 import services.FormationController;
 import services.OrganizerDataPrompter;
-import utilities.TeamDisplayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +52,10 @@ public class OrganizerCli {
                 return new ArrayList<>();
             }
 
-            displayAndExportTeams(formedTeams); //for the last steps, no instance because in the same class
-
+            displayTeamDetailsOnly(formedTeams); //for the last steps, no instance because in the same class
+            System.out.println("If you want to save the formed teams, please select option no.2 in the menu below.");
             return formedTeams;
+
 
         } catch (Exception e){
             System.err.println("\n❌ An unexpected error occurred in organizer flow:");
@@ -67,6 +67,26 @@ public class OrganizerCli {
     }
 
 
+
+    // first methods to be called.
+
+
+
+
+
+
+
+
+
+
+
+
+    //Method to only display, which gets called by the formation
+    public void displayTeamDetailsOnly(List<List<Participant>> formedTeams){
+       //reuse my helper
+        displayTeams(formedTeams);
+    }
+
     //separate function to calling the team dispaly and exporting orchestration
     public void displayAndExportTeams(List<List<Participant>> formedTeams) {
         if (formedTeams == null || formedTeams.isEmpty()) {
@@ -75,7 +95,7 @@ public class OrganizerCli {
         }
 
         try{
-            TeamDisplayer.displayTeams(formedTeams);
+            displayTeams(formedTeams);
 
             //Asking whether he wants it imported.
             System.out.print("Would you like to export these teams to a CSV file? (Y/N): ");
@@ -99,6 +119,56 @@ public class OrganizerCli {
             System.err.println("   " + e.getMessage());
         }
 
+    }
+
+
+    //helper which displays the formed teams, cleanyl formatted
+    private static void displayTeams(List<List<Participant>> formedTeams) {
+        if (formedTeams == null || formedTeams.isEmpty()) {
+            System.out.println("\n⚠️  No teams to display.");
+            return;
+        }
+
+        System.out.println("\n📊 Formed Teams:");
+        System.out.println("═══════════════════════════════════════════════════════");
+
+        int teamCount = 0;
+        for (int i = 0; i < formedTeams.size(); i++) {
+            List<Participant> team = formedTeams.get(i);
+
+            if (team == null || team.isEmpty()) {
+                continue;
+            }
+
+            teamCount++;
+            System.out.println("\n🏆 Team " + (i + 1) + " (" + team.size() + " members):");
+            System.out.println("───────────────────────────────────────────────────────");
+
+            for (Participant p : team) {
+                if (p == null) {
+                    continue;
+                }
+
+                try {
+                    System.out.printf("  • %s | %s | %s | %s (Skill: %d) | %s | Score: %d (%s)%n",
+                            p.getId(),
+                            p.getFullName(),
+                            p.getEmail(),
+                            p.getInterest(),
+                            p.getSkillLevel(),
+                            p.getRole(),
+                            p.getPersonalityScore(),
+                            p.getPersonalityType()
+                    );
+                } catch (Exception e) {
+                    System.out.println("  • [Error displaying participant: " + e.getMessage() + "]");
+                }
+            }
+        }
+
+        System.out.println("\n═══════════════════════════════════════════════════════");
+        System.out.println("Total teams displayed: " + teamCount);
+        System.out.println("═══════════════════════════════════════════════════════\n");
     }
 
 }
