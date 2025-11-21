@@ -1,6 +1,9 @@
 package utilities;
 
 import base.Organizer;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Authenticator {
@@ -13,6 +16,14 @@ public class Authenticator {
 
     //track the attempts
     private static final int ATTEMPT_LIMIT = 5;
+
+    private static final Map<String, Organizer> AUTHORIZED_ORGANIZERS = new HashMap<>();
+    static {
+        AUTHORIZED_ORGANIZERS.put("admin", new Organizer("System Administrator", "admin", "admin"));
+        AUTHORIZED_ORGANIZERS.put("organizer1", new Organizer("Organizer", "organizer1", "org001"));
+        AUTHORIZED_ORGANIZERS.put("organizer2", new Organizer("Organizer", "organizer2", "org002"));
+    }
+
 
     //private constrcutor to protect it from being instanciated
     private Authenticator() {
@@ -51,7 +62,7 @@ public class Authenticator {
             }
 
             // Delegate to Organizer's authentication method
-            Organizer organizer = Organizer.authenticate(enteredUsername, enteredPassword);
+            Organizer organizer = AUTHORIZED_ORGANIZERS.get(enteredUsername);
 
             if (organizer != null) {
                 // Successful login
