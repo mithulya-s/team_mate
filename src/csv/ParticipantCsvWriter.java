@@ -6,51 +6,51 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
-public class ParticipantCsvWriter {
-    //Class to write the built participant object once it's built.
-    private static final String FILE_PATH ="participants.csv";
-    private static final String HEADER_LINE="ID,Name,Email,PreferredGame,SkillLevel,PreferredRole,PersonalityScore,PersonalityType";
+public class ParticipantCsvWriter implements CsvWritable<Participant> {
+    private static final String FILE_PATH = "participants.csv";
+    private static final String HEADER_LINE =
+            "ID,Name,Email,PreferredGame,SkillLevel,PreferredRole,PersonalityScore,PersonalityType";
 
-
-    //function to write the participants to the file
-    public static void saveParticipantToCsv(Participant participant) throws IOException {
-
-        //input validation
-        if (participant == null) {
-            throw new IllegalArgumentException("Participant is null. Cannot save null.");
+    @Override
+    public void writeToCsv(List<Participant> participants, String filePath) throws IOException {
+        if (participants == null || participants.isEmpty()) {
+            throw new IllegalArgumentException("No participants to write. List is empty.");
         }
 
-        File file = new File(FILE_PATH);
+        File file = new File(filePath);
         boolean fileExists = file.exists();
 
-        //additionally to check if we can write
         if (fileExists && !file.canWrite()) {
-            System.out.println("File exists. But it is not writable.");
+            throw new IOException("File exists but is not writable: " + filePath);
         }
 
-        try (PrintWriter fileWriter = new PrintWriter(new FileWriter(FILE_PATH,true))) {
-            //writing the headers if not
+        try (PrintWriter fileWriter = new PrintWriter(new FileWriter(file, true))) {
+            // Write header if file is new
             if (!fileExists) {
                 fileWriter.println(HEADER_LINE);
             }
 
-            //helper usage to wote the line
-            writeSingleParticipantRow(fileWriter,participant);
-
-            //if erros come there
-            if (fileWriter.checkError()){
-                throw new IOException("Error while writing participant to file.");
+            for (Participant participant : participants) {
+                if (participant != null) {
+                    writeSingleParticipantRow(fileWriter, participant);
+                }
             }
-        }
-        catch (IOException e) {
-            throw new IOException("Error while writing participant to CSV: " + e.getMessage(),e);
+
+            if (fileWriter.checkError()) {
+                throw new IOException("Error occurred while writing participants to file.");
+            }
         }
     }
 
+    // Convenience method if you want to save a single participant (like your old version)
+    public void saveParticipantToCsv(Participant participant) throws IOException {
+        writeToCsv(List.of(participant), FILE_PATH);
+    }
 
-    //helper
-    private static void writeSingleParticipantRow(PrintWriter fileWriter, Participant participant){
+    // Helper to write one participant row
+    private static void writeSingleParticipantRow(PrintWriter fileWriter, Participant participant) {
         fileWriter.printf("%s,%s,%s,%s,%d,%s,%d,%s%n",
                 escapeCsvValue(participant.getId()),
                 escapeCsvValue(participant.getFullName()),
@@ -61,30 +61,22 @@ public class ParticipantCsvWriter {
                 participant.getPersonalityScore(),
                 participant.getPersonalityType()
         );
-
     }
 
-    //to catch values with special characters
+    // Escape values with special characters
     private static String escapeCsvValue(String value) {
-        if (value==null) {
+        if (value == null) {
             return "";
         }
-
-        //if values have other garbage
         if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
-            //double to escape
             value = value.replace("\"", "\"\"");
             return "\"" + value + "\"";
         }
         return value;
     }
 
-    //get the path in the torge
-    public static boolean getFilePath(){
+    // Convenience method to check if file exists
+    public static boolean fileExists() {
         return new File(FILE_PATH).exists();
     }
-
 }
-
-
-

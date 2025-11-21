@@ -12,13 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class ParticipantCsvReader {
+public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
     private final RowHandler rowHandler = new RowHandler();
 
     //thread pool configuration
     private static final int THREAD_POOL_SIZE=4;
 
-    public ProcessCsvResult readFile(String path) {
+    @Override
+    public ProcessCsvResult readFromCsv(String path){
         List<Participant> validParticipants = new ArrayList<>();
         List<CsvRowWarning> warnings = new ArrayList<>();
 
