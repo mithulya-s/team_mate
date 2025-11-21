@@ -8,14 +8,15 @@ import utilities.Role;
 public class Participant {
     //Represents a participant in the forming system, this is the template for creating a participant.
 
-    private final String id;
-    private final String fullName;
-    private final String email;
-    private final Interest interest;
-    private final int skillLevel;
-    private final Role role;
-    private final int personalityScore;
-    private final PersonalityType personalityType;
+
+    private  String id;
+    private  String fullName;
+    private  String email;
+    private  Interest interest;
+    private  int skillLevel;
+    private  Role role;
+    private  int personalityScore;
+    private  PersonalityType personalityType;
 
 
 
@@ -61,6 +62,19 @@ public class Participant {
     public PersonalityType getPersonalityType() {return personalityType;}
     public Role getRole() {return role;}
     public int getSkillLevel() {return skillLevel;}
+
+
+    //setters obv which we never use
+
+    public void setId(String id) {this.id = id;}
+    public void setFullName(String fullName) {this.fullName = fullName;}
+    public void setEmail(String email) {this.email = email;}
+    public void setInterest(Interest interest) {this.interest = interest;}
+    public void setSkillLevel(int skillLevel) {this.skillLevel = skillLevel;}
+    public void setRole(Role role) {this.role = role;}
+    public void setPersonalityScore(int personalityScore) {this.personalityScore = personalityScore;}
+    public void setPersonalityType(PersonalityType personalityType) {this.personalityType = personalityType;}
+
 
 
     // Helpers to validate
