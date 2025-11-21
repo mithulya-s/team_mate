@@ -1,6 +1,7 @@
 package cli;
 
 import base.Participant;
+import csv.FormedTeamsCsvReader;
 import services.ParticipantLookup;
 
 import java.util.List;
@@ -21,10 +22,18 @@ public class ParticipantLookupCli {
         System.out.println("Welcome to participant search.");
 
         if (formedTeams == null || formedTeams.isEmpty()) {
-            System.out.println("Sorry. Teams have not been formed yet. ");
-            System.out.println("Please check back later.\n");
-            return;
+            try {
+                formedTeams = new FormedTeamsCsvReader().readDefaultFile();
+                if (formedTeams.isEmpty()) {
+                    System.out.println("Sorry. Teams have not been formed yet.");
+                    return;
+                }
+            } catch (Exception e) {
+                System.out.println("No formed teams file found. Please check back later.");
+                return;
+            }
         }
+
 
         System.out.println("Please enter your participant ID: ");
         String participantId = scanner.nextLine().trim();
@@ -83,7 +92,7 @@ public class ParticipantLookupCli {
             }
         }
         catch (Exception e) {
-        System.err.println("An error occured during lookup: " + e.getMessage());
+        System.err.println("An error occurred during lookup: " + e.getMessage());
         }
     }
 }

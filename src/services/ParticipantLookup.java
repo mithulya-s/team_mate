@@ -5,9 +5,14 @@ import base.Participant;
 import java.util.List;
 
 public class ParticipantLookup {
-
     // lookup functions which seraches the formed teasm to retrieve both the participant's details as well
     //  the team details.
+
+
+
+
+
+
 
     public Participant findParticipantInTeams(String id, List<List<Participant>> formedTeams) {
         // method to get the particiapnt from the formed teams, validate erros first
