@@ -117,7 +117,7 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
         executor.shutdown();
         try {
             // Wait up to 30 seconds for all threads to complete
-            if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+            if (!executor.awaitTermination(40, TimeUnit.SECONDS)) {
                 executor.shutdownNow(); // Force shutdown if timeout
                 warnings.add(new CsvRowWarning(-1,
                         List.of("Warning: Some threads did not complete in time")));
