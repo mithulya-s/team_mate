@@ -11,6 +11,7 @@ public class ParticipantLookup {
     //  the team details
     private final Scanner scanner;
 
+    //constructor
     public ParticipantLookup(Scanner scanner) {
         this.scanner = scanner;
     }
