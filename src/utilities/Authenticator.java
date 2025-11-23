@@ -1,37 +1,37 @@
 package utilities;
 
-import base.Organizer;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Authenticator {
-    //A single instance of the authenticator class following the singleton pattern
+    // Singleton instance
     private static Authenticator authInstance;
 
-    //current session state
-    private Organizer currentOrganizer;
+    // Current session state
+    private String currentFullName;
+    private String currentUsername;
     private boolean isAuthenticated;
 
-    //track the attempts
+    // Track the attempts
     private static final int ATTEMPT_LIMIT = 5;
 
-    private static final Map<String, Organizer> AUTHORIZED_ORGANIZERS = new HashMap<>();
+    // Authorized organizers (username → [fullName,password])
+    private static final Map<String, String[]> AUTHORIZED_ORGANIZERS = new HashMap<>();
     static {
-        AUTHORIZED_ORGANIZERS.put("admin", new Organizer("System Administrator", "admin", "admin"));
-        AUTHORIZED_ORGANIZERS.put("organizer1", new Organizer("Organizer", "organizer1", "org001"));
-        AUTHORIZED_ORGANIZERS.put("organizer2", new Organizer("Organizer", "organizer2", "org002"));
+        AUTHORIZED_ORGANIZERS.put("admin", new String[]{"System Administrator", "admin"});
+        AUTHORIZED_ORGANIZERS.put("organizer1", new String[]{"Organizer", "org001"});
+        AUTHORIZED_ORGANIZERS.put("organizer2", new String[]{"Organizer", "org002"});
     }
 
-
-    //private constrcutor to protect it from being instanciated
+    // Private constructor (singleton)
     private Authenticator() {
-        this.currentOrganizer = null;
+        this.currentFullName = null;
+        this.currentUsername = null;
         this.isAuthenticated = false;
     }
 
-    //gets the instance, create of it isnt' there
+    // Singleton accessor
     public static Authenticator getInstance() {
         if (authInstance == null) {
             authInstance = new Authenticator();
@@ -39,7 +39,7 @@ public class Authenticator {
         return authInstance;
     }
 
-    //display
+    // Login flow
     public boolean login(Scanner scanner) {
         System.out.println("\n🔐 Organizer Login");
         System.out.println("═══════════════════════════════════════════════════════");
@@ -61,15 +61,14 @@ public class Authenticator {
                 continue;
             }
 
-            // Delegate to Organizer's authentication method
-            Organizer organizer = AUTHORIZED_ORGANIZERS.get(enteredUsername);
+            String[] organizerData = AUTHORIZED_ORGANIZERS.get(enteredUsername);
 
-            if (organizer != null) {
-                // Successful login
-                this.currentOrganizer = organizer;
+            if (organizerData != null && organizerData[1].equals(enteredPassword)) {
+                this.currentUsername = enteredUsername;
+                this.currentFullName = organizerData[0];
                 this.isAuthenticated = true;
                 System.out.println("\n✅ Login successful!");
-                System.out.println("👋 Welcome, " + organizer.getFullName() + "!\n");
+                System.out.println("👋 Welcome, " + currentFullName + "!\n");
                 return true;
             } else {
                 attemptCounter++;
@@ -86,30 +85,32 @@ public class Authenticator {
         return false;
     }
 
-
+    // Logout
     public void logout() {
         if (isAuthenticated) {
-            System.out.println("👋 Goodbye, " + currentOrganizer.getFullName() + "!");
+            System.out.println("👋 Goodbye, " + currentFullName + "!");
         }
-        this.currentOrganizer = null;
+        this.currentFullName = null;
+        this.currentUsername = null;
         this.isAuthenticated = false;
     }
 
-
+    // State checks
     public boolean isAuthenticated() {
         return isAuthenticated;
     }
 
-
-    public Organizer getCurrentOrganizer() {
-        return currentOrganizer;
+    public String getCurrentOrganizerName() {
+        return currentFullName;
     }
 
+    public String getCurrentOrganizerUsername() {
+        return currentUsername;
+    }
 
     public void requireAuthentication() {
         if (!isAuthenticated) {
             throw new IllegalStateException("Authentication required. Please login first.");
         }
     }
-
 }
