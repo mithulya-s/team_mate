@@ -14,12 +14,17 @@ public class OrganizerService {
     private final Scanner scanner;
     private final ParticipantCsvReader csvReader= new ParticipantCsvReader();
 
+    //Constructor
     public OrganizerService(Scanner scanner) {
         this.scanner = scanner;
     }
 
 
-    public List<List<Participant>> manageOrganizerFlow() {
+
+    //Formation methods
+
+    //Form and return teams
+    public List<List<Participant>> manageFormationFlow() {
         System.out.println("Welcome to Organizer CLI");
         System.out.println("===========================================================");
 
@@ -56,7 +61,6 @@ public class OrganizerService {
             System.out.println("If you want to save the formed teams, please select option no.2 in the menu below.");
             return formedTeams;
 
-
         } catch (Exception e){
             System.err.println("\n❌ An unexpected error occurred in organizer flow:");
             System.err.println("   " + e.getMessage());
@@ -66,10 +70,7 @@ public class OrganizerService {
 
     }
 
-
-
-    // first methods to be called.
-    //helper for path
+    // Get file path
     public String promptForPath() {
         while (true) {
             System.out.print("Enter the path to participant records (or press Enter to use default file): ");
@@ -95,6 +96,7 @@ public class OrganizerService {
 
     }
 
+    //Process file and load participant objects
     public List<Participant> loadParticipants(String filePath) {
         if (filePath == null || filePath.trim().isEmpty()) {
             System.err.println("❌ Error: File path cannot be empty.");
@@ -142,29 +144,23 @@ public class OrganizerService {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //Method to only display, which gets called by the formation
+    //Display only
     public void displayTeamDetailsOnly(List<List<Participant>> formedTeams){
        //reuse my helper
         displayTeams(formedTeams);
     }
 
-    //separate function to calling the team dispaly and exporting orchestration
+
+
+
+
+
+
+
+    // Save formed teams methods
     public void displayAndExportTeams(List<List<Participant>> formedTeams) {
         if (formedTeams == null || formedTeams.isEmpty()) {
-            System.out.println(" No teams to display or export.\n");
+            System.out.println("No teams formed yet. Please form teams first.");
             return;
         }
 
@@ -196,10 +192,12 @@ public class OrganizerService {
     }
 
 
-    //helper which displays the formed teams, cleanyl formatted
+
+
+    //General helper to formatted display
     private static void displayTeams(List<List<Participant>> formedTeams) {
         if (formedTeams == null || formedTeams.isEmpty()) {
-            System.out.println("\n⚠️  No teams to display.");
+            System.out.println("\n⚠️ No teams formed yet. Please form teams first");
             return;
         }
 
