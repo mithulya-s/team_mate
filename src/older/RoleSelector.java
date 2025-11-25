@@ -1,4 +1,5 @@
-package cli;
+/*
+package older.cli;
 
 import utilities.Role;
 
@@ -13,7 +14,7 @@ public class RoleSelector {
 
     public Role promptForRole() {
         while (true) {
-            displayMenu();
+            displayRoleMenu();
             String input = scanner.nextLine().trim();
 
             // validations
@@ -38,7 +39,7 @@ public class RoleSelector {
         }
     }
 
-    private void displayMenu() {
+    private void displayRoleMenu() {
         System.out.println("-------------------------------------------------------");
         System.out.println("Please select your preferred role: ");
         System.out.println("-------------------------------------------------------");
@@ -64,3 +65,5 @@ public class RoleSelector {
     }
 
 }
+
+ */

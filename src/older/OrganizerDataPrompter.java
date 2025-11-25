@@ -1,3 +1,4 @@
+/*
 package services;
 
 import base.Participant;
@@ -93,3 +94,5 @@ public class OrganizerDataPrompter {
 
 
 }
+
+ */

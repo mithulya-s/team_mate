@@ -1,6 +1,7 @@
 package services;
 
 import base.Participant;
+import base.Team;
 import utilities.PersonalityType;
 
 import java.util.*;
@@ -11,15 +12,15 @@ public class TeamBuilder {
 
     // ===== Result Wrapper =====
     public static class TeamFormationResult {
-        private final List<List<Participant>> formedTeams;
+        private final List<Team> formedTeams;
         private final List<Participant> pooledParticipants;
 
-        public TeamFormationResult(List<List<Participant>> formedTeams, List<Participant> pooledParticipants) {
+        public TeamFormationResult(List<Team> formedTeams, List<Participant> pooledParticipants) {
             this.formedTeams = formedTeams != null ? formedTeams : new ArrayList<>();
             this.pooledParticipants = pooledParticipants != null ? pooledParticipants : new ArrayList<>();
         }
 
-        public List<List<Participant>> getFormedTeams() {
+        public List<Team> getFormedTeams() {
             return formedTeams;
         }
 
@@ -45,10 +46,10 @@ public class TeamBuilder {
         }
 
         int completeTeams = participants.size() / teamSize;
-        List<List<Participant>> teams = new ArrayList<>();
+        List<Team> teams = new ArrayList<>();
 
         for (int i = 0; i < completeTeams; i++) {
-            teams.add(new ArrayList<>());
+            teams.add(new Team(i + 1)); // create Team wrapper with team number
         }
 
         if (teams.isEmpty()) {
@@ -64,7 +65,7 @@ public class TeamBuilder {
         for (int i = 0; i < maxAssign; i++) {
             Participant p = sorted.get(i);
             int bestIndex = getBestTeamForParticipant(p, teams, teamSize);
-            teams.get(bestIndex).add(p);
+            teams.get(bestIndex).addMember(p); // add via Team API
         }
 
         // Leftovers
@@ -75,11 +76,7 @@ public class TeamBuilder {
         return new TeamFormationResult(teams, pooled);
     }
 
-
-
-
-
-    // ===== Helper methods (unchanged logic) =====
+    // ===== Helper methods (unchanged logic, adjusted types) =====
 
     private static List<Participant> manageParticipantImportance(List<Participant> participants) {
         List<Participant> sorted = new ArrayList<>(participants);
@@ -105,16 +102,18 @@ public class TeamBuilder {
         };
     }
 
-    private static int getBestTeamForParticipant(Participant p, List<List<Participant>> teams, int teamSize) {
+    // teams is now List<Team>
+    private static int getBestTeamForParticipant(Participant p, List<Team> teams, int teamSize) {
         int bestIndex = 0;
         double bestScore = Double.NEGATIVE_INFINITY;
 
         for (int i = 0; i < teams.size(); i++) {
-            List<Participant> t = teams.get(i);
+            Team t = teams.get(i);
 
             if (t.size() >= teamSize) continue;
 
-            double score = computeTeamScore(p, t, teamSize);
+            // compute score using team members list
+            double score = computeTeamScore(p, t.getMembers(), teamSize);
             if (score > bestScore) {
                 bestScore = score;
                 bestIndex = i;
@@ -124,6 +123,7 @@ public class TeamBuilder {
         return bestIndex;
     }
 
+    // helpers still operate on List<Participant> for minimal change
     private static double computeTeamScore(Participant p, List<Participant> team, int teamSize) {
         double score = 0;
         score += scorePersonalityMatch(p, team, teamSize);

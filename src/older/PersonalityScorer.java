@@ -1,4 +1,7 @@
-package cli;
+/*
+package older.cli;
+
+import utilities.PersonalityType;
 
 import java.util.Scanner;
 
@@ -31,7 +34,7 @@ public class PersonalityScorer {
         //displaying the questions
         for (int i = 0; i < NUM_OF_QUESTIONS; i++) {
             System.out.println("Question " + (i + 1) + ":" +  questionList[i]);
-            int ans=promptForAnswer(i+1);
+            int ans= promptForPersonalityAnswer(i+1);
             rawScore+=ans;
         }
 
@@ -46,7 +49,7 @@ public class PersonalityScorer {
     }
 
     //Helper
-    private int promptForAnswer(int questionNumber) {
+    private int promptForPersonalityAnswer(int questionNumber) {
         while (true){
             System.out.print("Enter your answer (1-5): ");
             String answerStr =scanner.nextLine().trim();
@@ -73,4 +76,22 @@ public class PersonalityScorer {
             }
         }
     }
+
+
+    //think about moving this to util and make it static, classifier class
+    public PersonalityType classifyPersonalityType(int score) {
+        if (score<0 || score>100){
+            return null;
+        }
+
+        if (score >=90){
+            return PersonalityType.LEADER;
+        } else  if (score >=70){
+            return PersonalityType.BALANCED;
+        } else {
+            return PersonalityType.THINKER; //0 -69 band
+        }
+    }
 }
+
+ */

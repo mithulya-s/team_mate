@@ -1,3 +1,4 @@
+/*
 package base;
 
 public class Organizer {
@@ -20,3 +21,5 @@ public class Organizer {
         return "Organizer { Username='" + username + "', name='" + fullName + "'}";
     }
 }
+
+ */

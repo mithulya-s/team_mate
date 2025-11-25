@@ -75,7 +75,7 @@ public class FormationRunner {
 
     private double skillVariance(TeamBuilder.TeamFormationResult r) {
         List<Double> means = r.getFormedTeams().stream()
-                .map(t -> t.stream()
+                .map(t -> t.getMembers().stream()
                         .mapToInt(Participant::getSkillLevel)
                         .average()
                         .orElse(0))
