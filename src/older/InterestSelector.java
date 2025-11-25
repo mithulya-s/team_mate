@@ -1,4 +1,5 @@
-package cli;
+/*
+package older.cli;
 
 import utilities.Interest;
 
@@ -12,10 +13,10 @@ public class InterestSelector {
         //takes in the stuff from the survey class
     }
 
-    // cli functions for all the parts of the interest section of the survey
+    // older.cli functions for all the parts of the interest section of the survey
 
     public Interest promptForInterest() {
-        displayMenu();
+        displayInterestMenu();
         while (true) {
             String userInp = scanner.nextLine().trim();
 
@@ -42,7 +43,7 @@ public class InterestSelector {
         }
     }
 
-    private void displayMenu() {
+    private void displayInterestMenu() {
         System.out.println("-------------------------------------------------------");
         System.out.println("Please enter the number of your preferred interest:    ");
         System.out.println("-------------------------------------------------------");
@@ -69,3 +70,6 @@ public class InterestSelector {
         };
     }
 }
+
+ */
+

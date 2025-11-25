@@ -1,3 +1,4 @@
+/*
 package utilities;
 
 import base.Participant;
@@ -5,10 +6,10 @@ import base.Participant;
 import java.util.List;
 
 public class TeamDisplayer {
-
+    // General helper to formatted display
     public static void displayTeams(List<List<Participant>> formedTeams) {
         if (formedTeams == null || formedTeams.isEmpty()) {
-            System.out.println("\n⚠️  No teams to display.");
+            System.out.println("\n⚠️ No teams formed yet. Please form teams first");
             return;
         }
 
@@ -54,3 +55,5 @@ public class TeamDisplayer {
         System.out.println("═══════════════════════════════════════════════════════\n");
     }
 }
+
+ */

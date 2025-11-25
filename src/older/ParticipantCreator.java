@@ -1,7 +1,8 @@
+/*
 package services;
 
 import base.Participant;
-import cli.*;
+import older.cli.*;
 import utilities.*;
 
 import java.util.Scanner;
@@ -38,7 +39,7 @@ public class ParticipantCreator {
 
 
             //Calling the personality classifier, by sending the score we calculated earlier
-            PersonalityType personalityType= PersonalityClassifier.classifyPersonalityType(score);
+            PersonalityType personalityType= personalityScorer.classifyPersonalityType(score);
 
 
 
@@ -92,3 +93,5 @@ public class ParticipantCreator {
         }
     }
 }
+
+ */
