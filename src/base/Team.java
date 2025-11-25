@@ -33,13 +33,15 @@ public class Team {
         return members.size();
     }
 
+    public String summary() {
+        return "Team " + teamNumber + " (" + size() + " members)";
+    }
+
     // === Helper methods for OOP clarity ===
     public double averageSkillLevel() {
         if (members.isEmpty()) return 0;
         return members.stream().mapToInt(Participant::getSkillLevel).average().orElse(0);
     }
 
-    public String summary() {
-        return "Team " + teamNumber + " (" + size() + " members)";
-    }
+
 }
