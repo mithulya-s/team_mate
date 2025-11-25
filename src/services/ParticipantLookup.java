@@ -1,7 +1,7 @@
 package services;
 
 import base.Participant;
-import csv.FormedTeamsCsvReader;
+import csv.TeamCsvReader;
 
 import java.util.List;
 import java.util.Scanner;
@@ -19,9 +19,9 @@ public class ParticipantLookup {
     public void manageLookupFlow(List<List<Participant>> formedTeams) {
         System.out.println("Welcome to participant search.");
 
-        if (formedTeams == null || formedTeams.isEmpty()) {
+//        if (formedTeams == null || formedTeams.isEmpty()) {
             try {
-                formedTeams = new FormedTeamsCsvReader().readDefaultFile();
+                formedTeams = new TeamCsvReader().readDefaultFile();
                 if (formedTeams.isEmpty()) {
                     System.out.println("Sorry. Teams have not been formed yet.");
                     return;
@@ -30,7 +30,7 @@ public class ParticipantLookup {
                 System.out.println("No formed teams file found. Please check back later.");
                 return;
             }
-        }
+//        }
 
 
         System.out.println("Please enter your participant ID: ");
@@ -53,40 +53,43 @@ public class ParticipantLookup {
             Participant participant = findParticipantInTeams(participantId, formedTeams);
             List<Participant> assignedTeam = findTeamByParticipant(participantId, formedTeams);
 
-            if (participant == null || assignedTeam == null) {
+            if (participant != null || assignedTeam != null) {
+                    int teamNumber = getTeamNum(assignedTeam, formedTeams);
+
+                    System.out.println("\n✅ Team Assignment Found!");
+                    System.out.println("=======================================================");
+                    System.out.println("📋 You are assigned to Team " + teamNumber);
+                    System.out.println("=======================================================");
+                    System.out.println("\n👥 Your Teammates:");
+
+                    //printing the mates
+                    for (Participant p : assignedTeam) {
+                        if (p == null) {
+                            continue;
+                        }
+
+                        if (p.getId().equalsIgnoreCase(participantId)) {
+                            System.out.printf("  👉 %s (YOU)\n", p.getFullName());
+                            System.out.printf("      Role: %s | Interest: %s | Skill: %d\n",
+                                    p.getRole(), p.getInterest(), p.getSkillLevel());
+                        } else {
+                            System.out.printf("  • %s\n", p.getFullName());
+                            System.out.printf("      Role: %s | Interest: %s | Skill: %d\n",
+                                    p.getRole(), p.getInterest(), p.getSkillLevel());
+                        }
+
+                        System.out.println("\n===============================================");
+                    }
+                }
+            else {
                 System.out.println("\n❌ No team assignment found for ID: " + participantId);
                 System.out.println("\nPossible reasons:");
                 System.out.println("  • ID might be incorrect (check for typos)");
                 System.out.println("  • You may not have filled the survey yet");
                 System.out.println("  • Teams may not have been formed with your data");
                 System.out.println("\n💡 Please verify your ID or contact the organizer.\n");
-            } else {
-                int teamNumber = getTeamNum(assignedTeam, formedTeams);
 
-                System.out.println("\n✅ Team Assignment Found!");
-                System.out.println("=======================================================");
-                System.out.println("📋 You are assigned to Team " + teamNumber);
-                System.out.println("=======================================================");
-                System.out.println("\n👥 Your Teammates:");
 
-                //printing the mates
-                for (Participant p : assignedTeam) {
-                    if (p == null) {
-                        continue;
-                    }
-
-                    if (p.getId().equalsIgnoreCase(participantId)) {
-                        System.out.printf("  👉 %s (YOU)\n", p.getFullName());
-                        System.out.printf("      Role: %s | Interest: %s | Skill: %d\n",
-                                p.getRole(), p.getInterest(), p.getSkillLevel());
-                    } else {
-                        System.out.printf("  • %s\n", p.getFullName());
-                        System.out.printf("      Role: %s | Interest: %s | Skill: %d\n",
-                                p.getRole(), p.getInterest(), p.getSkillLevel());
-                    }
-
-                    System.out.println("\n===============================================");
-                }
             }
         }
         catch (Exception e) {
