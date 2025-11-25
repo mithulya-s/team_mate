@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("🎮 Welcome to the University Gaming Club!");
+        System.out.println("\n🎮 Welcome to the University Gaming Club!");
 
         while (true) {
             System.out.println("\nWho are you?");
@@ -28,7 +28,7 @@ public class Main {
             } else if (choice == 2) {
                 initiateOrganizerFlow(scanner);
             } else {
-                System.out.println("Exiting. See you next time!");
+                System.out.println("\nExiting. See you next time!");
                 break;
             }
         }
@@ -58,8 +58,9 @@ public class Main {
     }
 
     private static void initiateOrganizerFlow(Scanner scanner) {
-        Authenticator auth = Authenticator.getInstance();
 
+        //Authentication
+        Authenticator auth = Authenticator.getInstance();
         if (!auth.isAuthenticated()) {
             boolean loginSuccess = auth.login(scanner);
             if (!loginSuccess) {
@@ -68,24 +69,20 @@ public class Main {
             }
         }
 
-        OrganizerService orgCli = new OrganizerService(scanner);
-
+        // Menu loop
         while (true) {
             System.out.println("\n🛠️ Organizer Menu");
             System.out.println("1. Upload participant records and form teams");
-            System.out.println("2. View formed teams");
+            System.out.println("2. Save formed teams"); //add the view maybe
             System.out.println("0. Back to main menu");
 
             int choice = processChoice(scanner);
+            OrganizerService orgCli = new OrganizerService(scanner);
 
             if (choice == 1) {
-                formedTeams = orgCli.manageOrganizerFlow(); // store teams
+                formedTeams = orgCli.manageFormationFlow(); // store teams
             } else if (choice == 2) {
-                if (formedTeams == null || formedTeams.isEmpty()) {
-                    System.out.println("No teams formed yet. Please form teams first.");
-                } else {
-                    orgCli.displayAndExportTeams(formedTeams);
-                }
+                orgCli.displayAndExportTeams(formedTeams);
             } else {
                 break;
             }
