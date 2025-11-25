@@ -1,6 +1,7 @@
 package services;
 
 import base.Participant;
+import base.Team;
 import csv.*;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class OrganizerService {
     // Formation methods
 
     // Form and return teams
-    public List<List<Participant>> manageFormationFlow() {
+    public List<Team> manageFormationFlow() {
         System.out.println("Welcome to Organizer CLI");
         System.out.println("===========================================================");
 
@@ -42,7 +43,7 @@ public class OrganizerService {
 
             int teamSize = formationController.promptForTeamSize(compiledParticipants.size());
 
-            List<List<Participant>> formedTeams = formationController.callFormTeams(compiledParticipants, teamSize);
+            List<Team> formedTeams = formationController.callFormTeams(compiledParticipants, teamSize);
 
             if (formedTeams == null || formedTeams.isEmpty()) {
                 System.out.println("\n❌ Team formation could not be completed.");
@@ -155,7 +156,7 @@ public class OrganizerService {
     }
 
     // Display only
-    public void displayTeamDetailsOnly(List<List<Participant>> formedTeams) {
+    public void displayTeamDetailsOnly(List<Team> formedTeams) {
         // reuse my helper
         displayTeams(formedTeams);
     }
@@ -163,7 +164,7 @@ public class OrganizerService {
 
 
     // Save formed teams methods
-    public void displayAndExportTeams(List<List<Participant>> formedTeams) {
+    public void displayAndExportTeams(List<Team> formedTeams) {
         if (formedTeams == null || formedTeams.isEmpty()) {
             System.out.println("No teams formed yet. Please form teams first.");
             return;
@@ -198,7 +199,7 @@ public class OrganizerService {
 
 
     // General helper to formatted display
-    private static void displayTeams(List<List<Participant>> formedTeams) {
+    private static void displayTeams(List<Team> formedTeams) {
         if (formedTeams == null || formedTeams.isEmpty()) {
             System.out.println("\n⚠️ No teams formed yet. Please form teams first");
             return;
@@ -208,21 +209,20 @@ public class OrganizerService {
         System.out.println("═══════════════════════════════════════════════════════");
 
         int teamCount = 0;
-        for (int i = 0; i < formedTeams.size(); i++) {
-            List<Participant> team = formedTeams.get(i);
 
-            if (team == null || team.isEmpty()) {
+        for (Team team : formedTeams) {
+
+            if (team == null || team.getMembers().isEmpty()) {
                 continue;
             }
 
             teamCount++;
-            System.out.println("\n🏆 Team " + (i + 1) + " (" + team.size() + " members):");
+            System.out.println("\n🏆 Team " + team.getTeamNumber()
+                    + " (" + team.size() + " members):");
             System.out.println("───────────────────────────────────────────────────────");
 
-            for (Participant p : team) {
-                if (p == null) {
-                    continue;
-                }
+            for (Participant p : team.getMembers()) {
+                if (p == null) continue;
 
                 try {
                     System.out.printf("  • %s | %s | %s | %s (Skill: %d) | %s | Score: %d (%s)%n",
@@ -245,6 +245,7 @@ public class OrganizerService {
         System.out.println("Total teams displayed: " + teamCount);
         System.out.println("═══════════════════════════════════════════════════════\n");
     }
+
 
 
 
