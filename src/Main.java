@@ -1,4 +1,5 @@
 import base.Participant;
+import base.Team;
 import services.OrganizerService;
 import services.ParticipantLookup;
 import services.SurveyService;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static List<List<Participant>> formedTeams; // shared single state
+    private static List<Team> formedTeams; // shared single state
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
