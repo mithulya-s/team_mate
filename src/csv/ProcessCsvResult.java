@@ -2,33 +2,33 @@ package csv;
 
 import base.Participant;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 
 public class ProcessCsvResult {
-    // This will take all the read and stored things and will give it out nicely so the particiapnts and the issues
-    // can be passed and moved around nicely
 
+    private final List<Participant> validParticipants;
+    private final Map<Integer, List<String>> warningsByRow;
 
-    private final List<Participant> validParticipants;//storing the correct rows
-    private final List<CsvRowWarning> warnings; //Stroing the issues caught when reading the file
-
-    public ProcessCsvResult(List<Participant> validParticipants, List<CsvRowWarning> warnings) {
-        this.validParticipants = validParticipants != null ? validParticipants : new ArrayList<>();
-        this.warnings = warnings != null ? warnings : new ArrayList<>();
+    public ProcessCsvResult(List<Participant> validParticipants,
+                            Map<Integer, List<String>> warningsByRow) {
+        this.validParticipants = validParticipants != null ? validParticipants : List.of();
+        this.warningsByRow = warningsByRow != null ? warningsByRow : Collections.emptyMap();
     }
 
-    //Getters
     public List<Participant> getValidParticipants() {
         return validParticipants;
     }
-    public List<CsvRowWarning> getWarnings() {
-        return warnings;
+
+
+    public Map<Integer, List<String>> getWarningsByRow() {
+        return Collections.unmodifiableMap(warningsByRow);
     }
 
-
     public boolean hasWarnings() {
-        return !warnings.isEmpty();
+        return !warningsByRow.isEmpty();
     }
 
     public boolean hasValidParticipants() {

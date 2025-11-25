@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class TeamsToCsvWriter implements CsvWritable<List<Participant>> {
+public class TeamsCsvWriter implements CsvWritable<List<Participant>> {
     private static final String FILENAME = "formed_teams.csv";
 
     @Override
@@ -71,7 +71,7 @@ public class TeamsToCsvWriter implements CsvWritable<List<Participant>> {
 
     // Convenience method to use default filename
     public static void writeTeamsToCsv(List<List<Participant>> formedTeams) throws IOException {
-        new TeamsToCsvWriter().writeToCsv(formedTeams, FILENAME);
+        new TeamsCsvWriter().writeToCsv(formedTeams, FILENAME);
     }
 
     private static String escapeCsvValue(String value) {

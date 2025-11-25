@@ -6,41 +6,42 @@ import utilities.PersonalityType;
 import utilities.Role;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
+/**
+ * Reads participant CSV files and returns ProcessCsvResult containing valid participants
+ * and a map of warnings keyed by CSV row number.
+ */
 public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
-    //private final RowHandler rowHandler = new RowHandler();
-
-    //thread pool configuration
-    private static final int THREAD_POOL_SIZE=4;
+    // thread pool configuration
+    private static final int THREAD_POOL_SIZE = 4;
 
     @Override
     public ProcessCsvResult readFromCsv(String path) {
-        List<Participant> validParticipants = new ArrayList<>();
-        List<CsvRowWarning> warnings = new ArrayList<>();
+        List<Participant> validParticipants = Collections.synchronizedList(new ArrayList<>());
+        Map<Integer, List<String>> warningsByRow = Collections.synchronizedMap(new LinkedHashMap<>());
 
+        // basic path checks -> add file-level warnings using row key -1
         if (path == null || path.trim().isEmpty()) {
-            warnings.add(new CsvRowWarning(-1, List.of("File path cannot be empty.")));
-            return new ProcessCsvResult(validParticipants, warnings);
+            warningsByRow.put(-1, List.of("File path cannot be empty."));
+            return new ProcessCsvResult(validParticipants, warningsByRow);
         }
 
         if (!Files.exists(Paths.get(path))) {
-            warnings.add(new CsvRowWarning(-1, List.of("File not found: " + path)));
-            return new ProcessCsvResult(validParticipants, warnings);
+            warningsByRow.put(-1, List.of("File not found: " + path));
+            return new ProcessCsvResult(validParticipants, warningsByRow);
         }
 
+        // read lines (skip header)
         List<String> allRows = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String row;
             boolean isHeaderLine = true;
-
             while ((row = br.readLine()) != null) {
                 if (isHeaderLine) {
                     isHeaderLine = false;
@@ -51,12 +52,13 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
                 }
             }
         } catch (IOException e) {
-            warnings.add(new CsvRowWarning(-1, List.of("Error reading file: " + e.getMessage())));
-            return new ProcessCsvResult(validParticipants, warnings);
+            warningsByRow.put(-1, List.of("Error reading file: " + e.getMessage()));
+            return new ProcessCsvResult(validParticipants, warningsByRow);
         }
 
         if (allRows.isEmpty()) {
-            return new ProcessCsvResult(validParticipants, warnings);
+            // no rows but no error - return empty result
+            return new ProcessCsvResult(validParticipants, warningsByRow);
         }
 
         System.out.println("🧵 Processing " + allRows.size() + " rows using " + THREAD_POOL_SIZE + " threads...");
@@ -65,7 +67,7 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
         List<Future<RowProcessingResult>> futures = new ArrayList<>();
 
         for (int i = 0; i < allRows.size(); i++) {
-            final int rowNumber = i + 2;
+            final int rowNumber = i + 2; // account for header row
             final String row = allRows.get(i);
 
             Future<RowProcessingResult> future = executor.submit(() -> processRowInThread(row, rowNumber));
@@ -75,29 +77,30 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
         for (Future<RowProcessingResult> future : futures) {
             try {
                 RowProcessingResult result = future.get();
+
                 if (result.participant != null) {
-                    synchronized (validParticipants) {
-                        validParticipants.add(result.participant);
-                    }
+                    validParticipants.add(result.participant);
                 }
-                if (result.warnings != null) {
-                    synchronized (warnings) {
-                        warnings.add(result.warnings);
-                    }
+
+                if (result.warnings != null && !result.warnings.isEmpty()) {
+                    // keep the warnings keyed by row number
+                    warningsByRow.put(result.rowNumber, new ArrayList<>(result.warnings));
                 }
+
             } catch (InterruptedException e) {
-                warnings.add(new CsvRowWarning(-1, List.of("Thread interrupted: " + e.getMessage())));
+                warningsByRow.put(-1, List.of("Thread interrupted: " + e.getMessage()));
                 Thread.currentThread().interrupt();
             } catch (ExecutionException e) {
-                warnings.add(new CsvRowWarning(-1, List.of("Error in thread execution: " + e.getMessage())));
+                warningsByRow.put(-1, List.of("Error in thread execution: " + e.getMessage()));
             }
         }
 
+        // shutdown
         executor.shutdown();
         try {
             if (!executor.awaitTermination(40, TimeUnit.SECONDS)) {
                 executor.shutdownNow();
-                warnings.add(new CsvRowWarning(-1, List.of("Warning: Some threads did not complete in time")));
+                warningsByRow.put(-1, List.of("Warning: Some threads did not complete in time"));
             }
         } catch (InterruptedException e) {
             executor.shutdownNow();
@@ -105,12 +108,10 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
         }
 
         System.out.println("✅ Parallel processing complete!");
-        return new ProcessCsvResult(validParticipants, warnings);
+        return new ProcessCsvResult(validParticipants, warningsByRow);
     }
 
-
-
-    //helpers
+    // helper used by threads
     private RowProcessingResult processRowInThread(String line, int rowNumber) {
         try {
             String[] cols = line.split(",", -1);
@@ -123,39 +124,37 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
             }
 
             if (participant != null && warnings.isEmpty()) {
-                return new RowProcessingResult(participant, null);
+                return new RowProcessingResult(participant, rowNumber, null);
             } else {
                 if (warnings.isEmpty()) {
                     warnings.add("Failed to parse participant from row");
                 }
-                return new RowProcessingResult(null, new CsvRowWarning(rowNumber, warnings));
+                return new RowProcessingResult(null, rowNumber, warnings);
             }
         } catch (Exception e) {
-            return new RowProcessingResult(null,
-                    new CsvRowWarning(rowNumber, List.of("Unexpected error processing row: " + e.getMessage())));
+            return new RowProcessingResult(null, rowNumber,
+                    List.of("Unexpected error processing row: " + e.getMessage()));
         }
     }
 
-
-
-    //class to hold the threads
+    // small helper to carry thread results
     private static class RowProcessingResult {
         final Participant participant;
-        final CsvRowWarning warnings;
+        final int rowNumber;
+        final List<String> warnings;
 
-        RowProcessingResult(Participant participant, CsvRowWarning warnings) {
+        RowProcessingResult(Participant participant, int rowNumber, List<String> warnings) {
             this.participant = participant;
+            this.rowNumber = rowNumber;
             this.warnings = warnings;
         }
     }
 
-
-
-    //Row handler helpers
+    // --------------------- parsing & validation helpers ---------------------
 
     private Participant parseRow(String[] line, List<String> warnings) {
-        if (line.length != 8) {
-            warnings.add("Expected 8 columns, found " + line.length);
+        if (line == null || line.length != 8) {
+            warnings.add("Expected 8 columns, found " + (line == null ? 0 : line.length));
             return null;
         }
 
@@ -295,5 +294,4 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
             return -1;
         }
     }
-
 }

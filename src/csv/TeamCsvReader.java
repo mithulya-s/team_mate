@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class FormedTeamsCsvReader implements  CsvReadable<List<List<Participant>>> {
+public class TeamCsvReader implements  CsvReadable<List<List<Participant>>> {
     private static final String FILE_PATH = "formed_teams.csv";
 
     @Override
