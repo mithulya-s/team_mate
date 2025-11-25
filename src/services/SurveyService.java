@@ -12,10 +12,13 @@ import java.util.Scanner;
 public class SurveyService {
     private final Scanner scanner;
 
+    // Constructor
     public SurveyService(Scanner scanner) {
         this.scanner = scanner;
     }
 
+
+    // Survey Orchestration
     public void initiateSurvey() {
         System.out.println("Welcome to the University Game Club Survey!");
         System.out.println("Please answer the following questions " +

@@ -136,7 +136,7 @@ public class SurveyPrompter {
     }
 
     //Helper
-    private int promptForPersonalityAnswer(int questionNumber) {
+    private int promptForPersonalityAnswer(int qNum) {
         while (true){
             System.out.print("Enter your answer (1-5): ");
             String answerStr =scanner.nextLine().trim();
