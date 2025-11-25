@@ -6,21 +6,21 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-public class ParallelTeamFormationRunner {
+public class FormationRunner {
 
     private final int attempts; // how many independent solutions to try
     private final int threads;  // thread pool size
     private final long baseSeed;
 
-    public ParallelTeamFormationRunner(int attempts, int threads) {
+    public FormationRunner(int attempts, int threads) {
         this.attempts = attempts;
         this.threads = threads;
         this.baseSeed = System.nanoTime();
     }
 
-    public TeamBuilderAlgorithm.TeamFormationResult run(List<Participant> participants, int teamSize) {
+    public TeamBuilder.TeamFormationResult run(List<Participant> participants, int teamSize) {
         ExecutorService pool = Executors.newFixedThreadPool(threads);
-        List<Callable<TeamBuilderAlgorithm.TeamFormationResult>> tasks = new ArrayList<>();
+        List<Callable<TeamBuilder.TeamFormationResult>> tasks = new ArrayList<>();
 
         for (int i = 0; i < attempts; i++) {
             final int attemptIndex = i;
@@ -28,15 +28,15 @@ public class ParallelTeamFormationRunner {
             tasks.add(() -> {
                 List<Participant> copy = new ArrayList<>(participants);
                 Collections.shuffle(copy, new Random(baseSeed + attemptIndex));
-                return TeamBuilderAlgorithm.formTeams(copy, teamSize);
+                return TeamBuilder.formTeams(copy, teamSize);
             });
         }
 
         try {
-            List<Future<TeamBuilderAlgorithm.TeamFormationResult>> futures =
+            List<Future<TeamBuilder.TeamFormationResult>> futures =
                     pool.invokeAll(tasks);
 
-            List<TeamBuilderAlgorithm.TeamFormationResult> results =
+            List<TeamBuilder.TeamFormationResult> results =
                     futures.stream()
                             .map(f -> {
                                 try { return f.get(); }
@@ -51,12 +51,16 @@ public class ParallelTeamFormationRunner {
 
         } catch (InterruptedException e) {
             pool.shutdownNow();
-            return TeamBuilderAlgorithm.formTeams(participants, teamSize);
+            return TeamBuilder.formTeams(participants, teamSize);
         }
     }
 
-    private TeamBuilderAlgorithm.TeamFormationResult pickBest(
-            List<TeamBuilderAlgorithm.TeamFormationResult> results) {
+
+
+
+
+    private TeamBuilder.TeamFormationResult pickBest(
+            List<TeamBuilder.TeamFormationResult> results) {
 
         return results.stream()
                 .min(Comparator
@@ -65,11 +69,11 @@ public class ParallelTeamFormationRunner {
                 ).orElse(results.get(0));
     }
 
-    private int pooledSize(TeamBuilderAlgorithm.TeamFormationResult r) {
+    private int pooledSize(TeamBuilder.TeamFormationResult r) {
         return r.getPooledParticipants().size();
     }
 
-    private double skillVariance(TeamBuilderAlgorithm.TeamFormationResult r) {
+    private double skillVariance(TeamBuilder.TeamFormationResult r) {
         List<Double> means = r.getFormedTeams().stream()
                 .map(t -> t.stream()
                         .mapToInt(Participant::getSkillLevel)

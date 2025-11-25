@@ -1,13 +1,11 @@
 package services;
 
 import base.Participant;
-import utilities.Interest;
 import utilities.PersonalityType;
-import utilities.Role;
 
 import java.util.*;
 
-public class TeamBuilderAlgorithm {
+public class TeamBuilder {
     private static final int TEAM_INTEREST_CAP = 2;
     private static final int MIN_ROLES_FOR_BIG_TEAMS = 3;
 
@@ -99,9 +97,12 @@ public class TeamBuilderAlgorithm {
     }
 
     private static int getPersonalityImportance(PersonalityType p) {
-        if (p == PersonalityType.LEADER) return 1;
-        if (p == PersonalityType.THINKER) return 2;
-        return 3; // BALANCED
+        if (p == null) return 999;
+        return switch (p) {
+            case LEADER -> 1;
+            case THINKER -> 2;
+            default -> 3;
+        };
     }
 
     private static int getBestTeamForParticipant(Participant p, List<List<Participant>> teams, int teamSize) {

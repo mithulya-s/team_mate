@@ -85,13 +85,13 @@ public class FormationController {
         System.out.println("\n⚙️ Running team formation (parallel attempts)...");
 
         // parallel attempts
-        ParallelTeamFormationRunner runner =
-                new ParallelTeamFormationRunner(
+        FormationRunner runner =
+                new FormationRunner(
                         8,
                         4
                 );
 
-        TeamBuilderAlgorithm.TeamFormationResult result =
+        TeamBuilder.TeamFormationResult result =
                 runner.run(participants, teamSize);
 
         List<List<Participant>> formedTeams = result.getFormedTeams();
