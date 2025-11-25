@@ -1,6 +1,7 @@
 package services;
 
 import base.Participant;
+import base.Team;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,7 @@ public class FormationController {
         }
     }
 
-    public List<List<Participant>> callFormTeams(List<Participant> participants, int teamSize) {
+    public List<Team> callFormTeams(List<Participant> participants, int teamSize) {
 
         if (participants == null || participants.isEmpty()) {
             System.err.println("❌ No participants provided for team formation.");
@@ -94,7 +95,7 @@ public class FormationController {
         TeamBuilder.TeamFormationResult result =
                 runner.run(participants, teamSize);
 
-        List<List<Participant>> formedTeams = result.getFormedTeams();
+        List<Team> formedTeams = result.getFormedTeams();
 
         System.out.println("✅ Best result chosen:");
         System.out.println(" - Formed teams: " + formedTeams.size());
