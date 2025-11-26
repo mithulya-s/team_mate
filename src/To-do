@@ -1,0 +1,137 @@
+2.11
+- Change the question in the skill level selelctor
+- fix the input and the questions in the role selector to be more helpful
+- think about what to do with the ID thing, didn't add it in biodata
+- prompt for the full name then also for a preferred name with proper constraints, so it's easier to store and work
+    with but store the full name so it will be good to show it for the particapnt or user in the metrics.
+-Check the biodata input, and the formatting like lower case, the spaces and all that
+- Have to put constraints on the biodata prompter so the perfect content will be retured to be saved t the file.
+- consider make all participant fields private
+- Please decide about the constructors, how and what we need, whether what we have is good. (ask gpt)
+- Add username to the constructor or remove it completely
+
+4.11
+- think about the row handler instnace in the particiapant csv reader, is that okay to keep like that
+- question why is there an instance of the surveyScanner with a constructor in the participant builder class
+- Rethink about the username in the biodata prompter since we haven't even added it in the particiapnt
+- Think about renaming the method name in the personality scorer
+_ Make the ID geenrator to read the csv and then update. Decision to be made after the DB
+- Think about the writer closing after the participant is written to the file, search about it a bit
+- why the team size varaible uses the wrapper Integer instead of int
+- remove the dummy from the team builder
+- Chenge the sys out of the function which sends the partiicapnt to formation
+- Add the file export and the metric dispaly and those output things to the older.cli.
+- Check what's best to store the formed formedTeams
+
+6.11
+- Add the team number generator in the team base class and change the class stuff inside the formed formedTeams to csv class where it
+    geenrates by itself
+-check the console displayer participant format
+- think about the array list implementations, miss malsha had ArrayList<Sensor>(); kind of things.
+- think about whether to make the grouping static or not (the form formedTeams in team builder)
+
+7.11
+- check why we're getting the ceil
+- check whether i should make the form formedTeams method static or not, or to add an instance to the class that calls team formation
+
+8.11
+- fix the output like the sys prints after the team are formed in the organizer service
+- try to better modularize and group the
+- consder changing the place where the formed team doc gets saved, consider changing it to a normal folder since
+    currently it gets saved in the project folder
+- when the metric stuff are there, call those functions inside the team dispersal (which shoots it to the console)
+    so the metrics will also be shown.
+- add a separte functionality in the main flow to ask for a particiapnt or organizer, then inisde the participant as for the
+    survey option or the lookup option, then only call the lookup stuff
+- add proper team sutff so you cahan what;'s accessed when its lookup +
+
+9.11
+- In the main try to call the authenticator and the full flow in a call for both the sections, rather than
+    writing anything in the main, keep the full flow to another class, which shows the menu and everything.
+- check the flow of the lookup function, call participant by id part, the flow seems glitchy
+- check those setters, beucase i feel like the same lot is not moving in the app for formed formedTeams
+- so confused of the instances in the formed teasm thing
+
+10.11
+- consider deleting the csv handler class
+- added supporter for the lower band so check it a bit.
+
+12.11
+- think about whether we need an option to the organizer to view the partiicpant file before forming formedTeams (the default one specially)
+    not sure about the other one which he might upload by himself.
+- add a better way to remove the empty formedTeams, since now we're hiding them find a btter way ot keep it
+- has to fancify the output a bit more on look up assinged team
+- consider what to do with that DOTA 2 thing, in the file it's dota 2 but we added it as dota, so errors happen with reading
+
+13.11
+- add information confirmation when the organizer cancels file export
+- check the error validations we've added for enums and think of removing them
+- check the setFormedTeams injection in the lookup class, why do we have that?
+- think about whether we need to break the upload file and form formedTeams to 2 menu options sicne they're 2 options in the use case
+- check the role diversifier thing becuase there's this hash set thing.
+- think about bringing the diversifiers together
+- check if the dispaly and export formedTeams function is not made into an instance ebcuase its in the same class
+- check the formed formedTeams instance is global and same for everything, doesn't seem to throw errors tho
+- check the book for the suggestions as well.
+- there's a validation for th personality score added in the participant creatpr class
+    if the score is out of range, but reemove it by changing the band so it catches all
+- THINK ABOUT REDUCING THE CLASSES TO HAVE A GAME PREFERNCE so it manages the game stuf, then the interest and the biodata.
+    so this will go from like so many classes to three
+- for the bipdata prompter think about adding validation for numbers in name
+- rethink about the strict validations like those index stuff in the email prompter function
+- check the questions asked in the survey
+- added a helper to the personlaity scorer for answer validation and shows the score as well
+- add the formation metric, displayer and calutaro and all those things to the different class and call it in the team builder or anywhere
+    in the flow where the formation is asked for.
+- fix the enum case when wrtiing the particiapnt to file to match what's in miss malsha's data
+- change the breaking so that, the leftover people are added into a pool rather than added into wrong sized formedTeams.
+
+16/11
+- CHANGE THE CASING OF THE INTEREST, ROLE AND TYPE when writing a praticipant to the csv file, when he fills the survey
+- organizercli eke, team size>10 validation eka balanna,wehther a warning is needed or not
+- think abotu the repetitive exporting functions in both the older.cli and stuff and maybe think about moving it into another class (not feeling this tho)
+
+17.11
+- we have a private constructor in the organizer class, think about that a bit
+- added a logout functionality in hte organizer flow, it is updated in the authenticaotr and the main as well,
+    rethink about this since we might need to update the use cases
+-consider refactoring the service (names) to controller, which in return woul dbe easier to name and stuff
+- think about making a separate contoller called team formation controller which starts from the prompter for path (whihc we
+currntyl have in the older.cli -> move it to the controller, and add the call form teams to that class too, removing it from the
+    organizerDataPrompter class which it is in rn. (maybe rename the service for file something particianpt data related)
+
+18.11
+- change the formation controller and merge it back to a single one since we have one flow for it.
+
+19.11
+- check the lookup functionality becuase it doens't retreive the file even if it was there
+- check the organizer functionality to export and display also, if they don't say yes, it doesn;t write to the function
+- change the instance where the team list is used
+
+20.11
+- have to refactor participant list into the team wrapper
+- change the persoality questions to the given ones
+- remvoe the score from showing
+- change the print messages when the person is not assigned to a team
+
+21.11
+- test the view formed teams fucntion to check whether it works with only disaply, shows the option to export
+- ASSUMING THAT THE PROGRAM RUNS WELL, NO NEED TO HANDLE EXCEPTIONS IN THE SEQUENCE DIAGRAMS, USE THE NORMAL FLOW (the happy path)
+- think about adding that finally -> shutodwn for the thread part like in the prokject today
+- try to remove the method whihc calls the default path, rather rename the 'calltoCsv' methos names to the older method.
+
+22.11
+- change the if-else in the lookup to have the happy path in the if rather than the else
+- in the display formed teams if else in the main, think about adding a return to the if and removing the main cause from the else clause
+- remove the iterative authenticator, just try it once and return to main menu so that he can try again
+- add the authenticator stuff for the view formed teams activity
+
+23.11
+- try and integrate the fomartion runner to the engine but reconsider a bit becuase it works so well with the older one.
+
+25.11
+-change use case to save formed teams
+
+
+
+

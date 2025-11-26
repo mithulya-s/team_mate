@@ -1,0 +1,31 @@
+Fill Survey
+- think about adding the main caller also (not really important)
+- check a bit of the id generator method calls becuase it's not exactly there (like all the methods)
+- think about the return message of the csv writer 9the display (dont think we need that)
+- rather than putting the main class jsut use main method call...
+- what about the getID? and getInterest? and stuff in the self calls
+- add short names into lifelines of single instance classes
+- change the recursion to a self message type (with the box)
+- check for a recursion in getting the participants or so like the fomrwd teams one
+
+
+View assigned team
+- think of removing the main to jsut keep a single call
+- inside the alt box, think about adding the loop where the participant getters and setters are accessed and printed.
+- change the lifeline names
+
+View formed teams
+- i'm not ONE BIT confident about the auth, i don't even know whter i should put them or not
+- check the parasto only have var name not the type
+
+Initiate team formation
+- do we have to call the executor service when showing the paralell in sequen?
+- check thos put, add method paras 1.33, 1.3.4
+- check whether it's okay to call the same method twice
+- think about adding the participant getters in the team dispalyer call
+- do the rest of returns, alt, loop, par boxes and name lifeline, fix lifeline lengths
+
+
+
+
+

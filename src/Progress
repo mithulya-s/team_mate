@@ -1,0 +1,131 @@
+git log --pretty=format:"%h %an %ad %s" --date=iso
+
+
+2.11
+- Added the skill level prompter in CLI pack (returns the skill level)
+- Added the role enum
+- added the role prompter in the older.cli, which return the enum 'role'
+- Added the biodata prompter, named it since it doesn't store the data only returns it and is interacting with the user directly
+- decided to prompt for a username in the biodata, (like the preferred name i thought)
+- Decided to start and roughly draft the participant class
+- Made the fields and setters, not the getters yet since we might now change them. (therefore might have to make it private the feidls.)
+- Started with the CSV parts
+- In the CSV part, decoded to dive into the flow where the organizer provides the data and it's read then its soted.
+- Created the row parser utility to read the csv line on the sample fo rnow
+- Decided to have one class for the row handler where the parser and validator are seprate
+- think about the username col in the csv parser (add or not to)
+- added the validation and the aprsing logic for a single line, including all the exceptions logged
+
+4.12
+- moved all things CSV except for the service (orchestration) class to a new package called CSV
+- learned to keep all the generic helpers which will be used across in the util
+- Started the implementation of the part where the uploaded CSV will be read, the issues with the records logged and
+    the valid participant list is stored
+- Cretaed a class called csv row warnign to catch the issues in the csv file when reading. An array lsit of warnings
+    will be used.
+- Created process csv result as a helper to the main reader which will store and display and format the results nicely
+- Implmeneted the class which reads and outputs the 2 arraylists, uses a buffered reader and also catches the errors
+    if the file could not be read, which is also stored in the warnings al
+- created the survey older.cli class in the older.cli package, this one will do the question asking and
+- In the builder, no need for the classifier to be initialized since its static and it doestn interact with the user
+- Chnged the skill level method to be a non- arg becuase can't take arguents ne
+- Implemented the ID generator in the utility, basic ID with a counter
+- Made the survey service which interact with the user
+- decided to keep the id generation in the builder by calling the static utlity rather than adding it to the participant class.
+
+5.11
+- Started the class which takes the built particiapnt object and writes it into the csv immediately
+- called the csv file writer inside the psurvey service, so the particiapnt is saved after the confirmation message
+- Started building the organizer flow, and the organzier can either upload a completely new file
+    by giving the file path or added an option like default so that we can quickly take the file saved in the syste, for the
+    team formation
+- added the organizer older.cli whihc asks for the file, team size
+
+6.11
+- started implementing the part where the formed formedTeams are written to a csv and also the part where they're shown in the
+    console to the user.
+- added the class whihc dispalys the particiapnt to the console
+- changed the team size asking into the formation function
+- added the functionality of requeting for the export and writing the formed formedTeams to the csv as weel.
+- started formation strategy
+
+7.11
+- Started implementing the breaking strategy
+- implemented the helpers for team building separately in utility
+- check and understadn what the hell's going on with the breaking strtegy
+- check what's going on with the team breaking helpers as well
+- implmented or i beleive that i have implented the breaking stretgy
+- cleaned up the organizer flow, until the exporting of the files.
+- started the particiapnt lookup functionaity where he adds teh id to check which team he's in
+
+9.11
+- decided to connect the modules
+- changed the id generator to increment regardless of the session
+
+12.11
+- fixed formatting for formed team display'
+- enchnaced the lookup formatting
+-fixed a null pointer expection in the team builder
+- fixed the part where the header line was read as data and the partiicpat file was not beingread, now it reads like charm
+
+14.11
+- started exception handling
+- made the participant attributes final and removed the username field
+- added validations for the user service class, since tho is only shows messages, since the constructor throws error then the builder throws errors
+    so i have to manage them.
+- added nested pretty exceptions for the survey service class, so it nicely say which failed
+- In the prompters, there was so man scanner instances, HUGE problem. So fixed those.
+- added 2 helpers for the menu disaplay and the match case to match the values rather than doing it in the main
+- added helpers like menu dispalyers for the role selectors as well
+
+15.11
+- added a feedback part for the skill level selector, think about it a bit.
+- ADDED helpers in the CSV writer (particiapnt)
+- csv participant writer, throws errors whicha re kind of admin leevl but they are caught from the survey service and is ahndled
+    in a user friendly manner.
+- started fixign teh lookup flow, so that most of it is done
+- the lookup had a redundant search for team thing, fixed that.
+- started working again on the algorithm, to fix everything.
+- think of removing the supporter band and add it all to the band which was given
+
+16/11
+- fixed most of the algorithm
+- started adding the error handling for the organizer
+- cleared the doubts i had with threading
+- added debugs to the the service
+
+17.11
+- separated the authenticator from the organizer to add the singleton pattern.
+- added singleton pattern for the id generator and the authenticator, changed the main class and the particiapnt creator (which is affected by the id generator)
+-started the threads for processing survey data.
+
+18.11
+- fixed the threads for the team formation by adding a runner
+- started reducing the classes
+- removed the team dispalyer and added it as a helper method in the class whihc has display and export teams which is the organizer older.cli
+
+19.11
+- refactored the particiapnt flow, now it has 2 clalelrs, one personality class, the id and the writer.
+- added the team wrapper
+
+20.11
+- changed the organizer flow where in the form teams options the teams are only showed, and the export is there in the formed teams
+- moved the personality section to the prompter as well
+- moved the lookup older.cli into one class so lookup has one class now.
+- moved the organizer data prompter to the organizerCli class.
+- renamed oragnizerCli -> organizerService then moved it to service, no older.cli package.
+
+23/11
+- moved the row handler inside the file reader
+- broke the displayer into a separate class otherwise it wa sbecoming a mess
+- nope moved the displayer back to the big class
+
+25.11
+- moved the whole application to use team and it's methods than the nested array list which it was using earlier
+
+
+
+
+
+
+
