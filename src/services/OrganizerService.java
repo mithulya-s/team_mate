@@ -100,7 +100,7 @@ public class OrganizerService {
         System.out.println("\n📂 Loading participants from: " + filePath + "...");
 
         try {
-            ProcessCsvResult result = csvReader.readFromCsv(filePath);
+            ProcessCsvResult result = csvReader.readFromCsv(filePath); //1.3 & 1.3.16 (return)
 
             if (result == null) {
                 System.err.println("❌ Error: Failed to read file.");
@@ -160,6 +160,12 @@ public class OrganizerService {
         // reuse my helper
         displayTeams(formedTeams);
     }
+
+
+
+
+
+
 
 
 
@@ -245,8 +251,4 @@ public class OrganizerService {
         System.out.println("Total teams displayed: " + teamCount);
         System.out.println("═══════════════════════════════════════════════════════\n");
     }
-
-
-
-
 }

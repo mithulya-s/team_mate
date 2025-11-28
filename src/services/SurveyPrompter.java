@@ -111,11 +111,11 @@ public class SurveyPrompter {
 
         // The questions stored in an array since it's fixed
         String[] questionList={
-                "I enjoy taking charge and leading others",
-                "I prefer working collaboratively in a team",
-                "I analyze situations carefully before acting",
-                "I adapt easily to changing circumstances",
-                "I support and encourage my teammates"
+                "I enjoy taking the lead and guiding others during group activities.",
+                "I prefer analyzing situations and coming up with strategic solutions.",
+                "I work well with others and enjoy collaborative teamwork.",
+                "I am calm under pressure and can help maintain team morale.",
+                "I like making quick decisions and adapting in dynamic situations."
         };
 
         //displaying the questions
@@ -129,7 +129,7 @@ public class SurveyPrompter {
         int totalScore=(rawScore*4);
 
         System.out.println("Personality Assessment completed!");
-        System.out.println("Your score: " + totalScore + "/100\n");
+        //System.out.println("Your score: " + totalScore + "/100\n");
 
         //no need to return the persoality type since the class returns from the top,so we're returning the score only.
         return totalScore;

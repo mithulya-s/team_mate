@@ -59,8 +59,9 @@ public class FormationRunner {
 
 
 
-    private TeamBuilder.TeamFormationResult pickBest(
-            List<TeamBuilder.TeamFormationResult> results) {
+
+
+    private TeamBuilder.TeamFormationResult pickBest(List<TeamBuilder.TeamFormationResult> results) {
 
         return results.stream()
                 .min(Comparator

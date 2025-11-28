@@ -22,11 +22,11 @@ public class ProcessCsvResult {
         return validParticipants;
     }
 
-
     public Map<Integer, List<String>> getWarningsByRow() {
         return Collections.unmodifiableMap(warningsByRow);
     }
 
+    /*
     public boolean hasWarnings() {
         return !warningsByRow.isEmpty();
     }
@@ -34,4 +34,6 @@ public class ProcessCsvResult {
     public boolean hasValidParticipants() {
         return !validParticipants.isEmpty();
     }
+
+     */
 }

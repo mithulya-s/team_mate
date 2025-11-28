@@ -13,10 +13,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
 
-/**
- * Reads participant CSV files and returns ProcessCsvResult containing valid participants
- * and a map of warnings keyed by CSV row number.
- */
+
 public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
     // thread pool configuration
     private static final int THREAD_POOL_SIZE = 4;
@@ -110,6 +107,14 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
         System.out.println("✅ Parallel processing complete!");
         return new ProcessCsvResult(validParticipants, warningsByRow);
     }
+
+
+
+
+
+
+
+
 
     // helper used by threads
     private RowProcessingResult processRowInThread(String line, int rowNumber) {

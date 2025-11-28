@@ -30,6 +30,7 @@ public class IdGenerator {
         return String.format("%s%03d", PREFIX, lastGeneratedId);
     }
 
+    /*
     public int getCurrentMaxId() {
         return lastGeneratedId;
     }
@@ -37,8 +38,6 @@ public class IdGenerator {
     public synchronized void reset() {
         this.lastGeneratedId = 0;
     }
-
-    /*
     public synchronized void refresh() {
         int fileMaxId = findMaxIdFromFile();
         if (fileMaxId > lastGeneratedId) {

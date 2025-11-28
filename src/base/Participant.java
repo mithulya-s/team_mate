@@ -4,8 +4,6 @@ import utilities.Interest;
 import utilities.PersonalityType;
 import utilities.Role;
 
-//Represents a participant in the forming system, this is the template for creating a participant.
-
 public class Participant {
     private  String id;
     private  String fullName;
