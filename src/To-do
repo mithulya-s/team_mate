@@ -132,6 +132,13 @@ currntyl have in the older.cli -> move it to the controller, and add the call fo
 25.11
 -change use case to save formed teams
 
+26.11
+-check the functionlaity of adding a file during the process, remove that option if it's not there.
+
+27.11
+- add the single instance naming for sequence diagrams
+
+
 
 
 
