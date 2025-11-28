@@ -1,3 +1,7 @@
+FIX OVERLAY STRIPS OF ALL AND THE INSTANCE NAMING.
+- check
+
+
 Fill Survey
 - think about adding the main caller also (not really important)
 - check a bit of the id generator method calls becuase it's not exactly there (like all the methods)
@@ -24,6 +28,14 @@ Initiate team formation
 - check whether it's okay to call the same method twice
 - think about adding the participant getters in the team dispalyer call
 - do the rest of returns, alt, loop, par boxes and name lifeline, fix lifeline lengths
+- add the authenticator parts
+- formed teams should return to main via the organizer service
+- think about the validate line in the participant reader with all those exceptions
+- there are certain tings where you call one method after one method, so be careful of that
+- think whethter to add that private final by calling the team class
+
+CHECK WITH TEAM CLASS AND ADD THEM WHERE IT'S CALLED
+
 
 
 
