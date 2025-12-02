@@ -1,4 +1,3 @@
-import base.Participant;
 import base.Team;
 import services.OrganizerService;
 import services.ParticipantLookup;

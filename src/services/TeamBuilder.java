@@ -10,7 +10,7 @@ public class TeamBuilder {
     private static final int TEAM_INTEREST_CAP = 2;
     private static final int MIN_ROLES_FOR_BIG_TEAMS = 3;
 
-    // ===== Result Wrapper =====
+
     public static class TeamFormationResult {
         private final List<Team> formedTeams;
         private final List<Participant> pooledParticipants;

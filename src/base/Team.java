@@ -33,6 +33,8 @@ public class Team {
         return members.size();
     }
 
+
+   /*
     public boolean isFull(int teamSize) {
         return size() >= teamSize;
     }
@@ -48,6 +50,8 @@ public class Team {
     public Set<Interest> uniqueInterests() {
         return members.stream().map(Participant::getInterest).collect(Collectors.toSet());
     }
+
+     */
 
     @Override
     public String toString() {

@@ -75,8 +75,11 @@ public class ParticipantCsvWriter implements CsvWritable<Participant> {
         return value;
     }
 
+    /*
     // Convenience method to check if file exists
     public static boolean fileExists() {
         return new File(FILE_PATH).exists();
     }
+
+     */
 }

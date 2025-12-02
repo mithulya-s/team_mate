@@ -85,6 +85,15 @@ public class Authenticator {
         return false;
     }
 
+
+
+    // State checks
+    public boolean isAuthenticated() {
+        return isAuthenticated;
+    }
+
+    /*
+
     // Logout
     public void logout() {
         if (isAuthenticated) {
@@ -94,12 +103,6 @@ public class Authenticator {
         this.currentUsername = null;
         this.isAuthenticated = false;
     }
-
-    // State checks
-    public boolean isAuthenticated() {
-        return isAuthenticated;
-    }
-
     public String getCurrentOrganizerName() {
         return currentFullName;
     }
@@ -113,4 +116,6 @@ public class Authenticator {
             throw new IllegalStateException("Authentication required. Please login first.");
         }
     }
+
+     */
 }
