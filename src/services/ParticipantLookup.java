@@ -48,39 +48,40 @@ public class ParticipantLookup {
 
             if (participant != null && assignedTeam != null) {
 
-                System.out.println("\n✅ Team Assignment Found!");
-                System.out.println("=======================================================");
-                System.out.println("📋 You are assigned to Team " + assignedTeam.getTeamNumber());
-                System.out.println("=======================================================");
-                System.out.println("\n👥 Your Teammates:");
+                System.out.println("\nTeam Assignment Found");
+                System.out.println("===============================================================================");
+                System.out.println("You are assigned to Team " + assignedTeam.getTeamNumber());
+                System.out.println("===============================================================================");
+                System.out.println("\n Teammates:");
+                System.out.println("===============================================================================");
 
                 for (Participant p : assignedTeam.getMembers()) {
                     if (p == null) continue;
 
                     if (p.getId().equalsIgnoreCase(participantId)) {
-                        System.out.printf("  👉 %s (YOU)\n", p.getFullName());
+                        System.out.printf(" • %s (You)\n", p.getFullName());
                     } else {
                         System.out.printf("  • %s\n", p.getFullName());
                     }
 
                     System.out.printf(
-                            "      Role: %s | Interest: %s | Skill: %d\n",
+                            "      Role: %s | Interest: %s | Skill: %d\n\n",
                             p.getRole(), p.getInterest(), p.getSkillLevel()
                     );
                 }
 
-                System.out.println("\n===============================================");
+                System.out.println("\n============================================================================");
             }
             else {
-                System.out.println("\n❌ No team assignment found for ID: " + participantId);
+                System.out.println("\n No team assignment found for ID: " + participantId);
             }
 
         } catch (Exception e) {
-            System.err.println("An error occurred during lookup: " + e.getMessage());
+            System.err.println("An error occurred during lookup." + e.getMessage());
         }
     }
 
-    public Participant findParticipantInTeams(String id, List<Team> formedTeams) {
+    private Participant findParticipantInTeams(String id, List<Team> formedTeams) {
         if (id == null || formedTeams == null || formedTeams.isEmpty()) {
             return null;
         }
@@ -100,7 +101,7 @@ public class ParticipantLookup {
     }
 
     // Returns the Team object, not List<Participant>
-    public Team findTeamByParticipant(String id, List<Team> formedTeams) {
+    private Team findTeamByParticipant(String id, List<Team> formedTeams) {
         if (id == null || id.trim().isEmpty()) return null;
         if (formedTeams == null || formedTeams.isEmpty()) return null;
 

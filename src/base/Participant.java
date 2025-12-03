@@ -109,23 +109,10 @@ public class Participant {
     //Method override s
     @Override
     public String toString() {
-        return String.format("Participant{ID='%s', Name='%s', Interest=%s, Skill Level=%s, Role=%s, Personality Type=%s}",
+        return String.format("Participant" +
+                        "[ID: '%s', Name: '%s', Interest: %s, Skill Level: %s, Role: %s, Personality Type: %s]",
                 id, fullName, interest,skillLevel, role, personalityType);
     }
-
-    /*
-    // For participant console output. and to print in places where its created.
-    public String displayParticipantString(){
-        return String.format("%s - %s (%s, Skill: %d, %s)",
-                id, fullName, interest, skillLevel, personalityType);
-    }
-
-     */
-
-
-
-
-
 
 }
 

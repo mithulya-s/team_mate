@@ -18,7 +18,7 @@ public class FormationRunner {
         this.baseSeed = System.nanoTime();
     }
 
-    public TeamBuilder.TeamFormationResult run(List<Participant> participants, int teamSize) {
+    public TeamBuilder.TeamFormationResult runFormationThreads(List<Participant> participants, int teamSize) {
         ExecutorService pool = Executors.newFixedThreadPool(threads);
         List<Callable<TeamBuilder.TeamFormationResult>> tasks = new ArrayList<>();
 
@@ -73,7 +73,6 @@ public class FormationRunner {
     private int pooledSize(TeamBuilder.TeamFormationResult r) {
         return r.getPooledParticipants().size();
     }
-
     private double skillVariance(TeamBuilder.TeamFormationResult r) {
         List<Double> means = r.getFormedTeams().stream()
                 .map(t -> t.getMembers().stream()

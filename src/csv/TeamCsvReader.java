@@ -55,7 +55,7 @@ public class TeamCsvReader implements CsvReadable<List<Team>> {
 
                 } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
                     // Skip malformed row but log a warning for debugging
-                    System.err.println("⚠️ Skipping malformed row: \"" + line + "\" — " + ex.getMessage());
+                    System.err.println("⚠️ Skipping malformed row: \"" + line + "\" — " + ex.getCause());
                 }
             }
         } catch (IOException e) {

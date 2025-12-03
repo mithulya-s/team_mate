@@ -7,7 +7,6 @@ import utilities.Role;
 import java.util.Scanner;
 
 public class SurveyPrompter {
-    // has all the prmopter classes together.
     private final Scanner scanner;
     private static final int MIN_EXP_LEVEL=1;
     private static final int MAX_EXP_LEVEL=10;
@@ -30,27 +29,31 @@ public class SurveyPrompter {
 
             // Validation for not empty
             if (name.isEmpty()) {
-                System.out.print("Name cannot be empty. Please try again: ");
+                System.out.print("Name cannot be empty.\n");
                 continue;
             }
 
             // For length (just for additional)
             if(name.length() < 2){
-                System.out.print("Name must be at least 2 characters long. " +
-                        "Please enter your full name: ");
+                System.out.print("Name must be at least 2 characters long.\n");
                 continue;
             }
 
             // At least one letter
             if (!name.matches(".*[a-zA-Z].*")) {
-                System.out.println("❌ Name must contain at least one letter.");
+                System.out.println("Name must contain at least one letter.\n");
                 continue;
             }
+
+            if (!name.matches("[a-zA-Z\\s.'-]+")) {
+                System.out.println("Name can only contain letters, spaces, apostrophes ('), hyphens (-), or dots (.)\n");
+                continue;
+            }
+
 
             return name; // good name
         }
     }
-
     public String promptForEmail() {
         while (true) {
             System.out.print("Enter your university email address: ");
@@ -58,19 +61,19 @@ public class SurveyPrompter {
 
             // non - empty
             if (email.isEmpty()) {
-                System.out.print("Email cannot be empty. Please try again: ");
+                System.out.print("Email cannot be empty. Please try again: \n");
                 continue;
             }
 
             //should contain @
             if (!email.contains("@")) {
-                System.out.println("Invalid email format. Must contain '@'.");
+                System.out.println("Invalid email format. Must contain '@'. Please try again: \n");
                 continue;
             }
 
             //must have the dot
             if (!email.contains(".")) {
-                System.out.println("Invalid email format. Must contain the domain. (Eg:   '. , .edu')");
+                System.out.println("Invalid email format. Must contain the domain. (Eg:   '. , .edu'). Please try again: \n");
                 continue;
             }
 
@@ -105,17 +108,19 @@ public class SurveyPrompter {
     public int promptForPersonality() {
         int rawScore =0;
 
-        System.out.println("\n📋 Personality Assessment");
+        System.out.println("=======================================================");
+        System.out.println("               PERSONALITY ASSESSMENT                  ");
+        System.out.println("=======================================================");
         System.out.println("Please answer the following questions on a value of 1-5:");
         System.out.println("(1 = Strongly Disagree, 5 = Strongly Agree)\n");
 
         // The questions stored in an array since it's fixed
         String[] questionList={
-                "I enjoy taking the lead and guiding others during group activities.",
-                "I prefer analyzing situations and coming up with strategic solutions.",
-                "I work well with others and enjoy collaborative teamwork.",
-                "I am calm under pressure and can help maintain team morale.",
-                "I like making quick decisions and adapting in dynamic situations."
+                "\nI enjoy taking the lead and guiding others during group activities.",
+                "\nI prefer analyzing situations and coming up with strategic solutions.",
+                "\nI work well with others and enjoy collaborative teamwork.",
+                "\nI am calm under pressure and can help maintain team morale.",
+                "\nI like making quick decisions and adapting in dynamic situations."
         };
 
         //displaying the questions
@@ -134,7 +139,6 @@ public class SurveyPrompter {
         //no need to return the persoality type since the class returns from the top,so we're returning the score only.
         return totalScore;
     }
-
     //Helper
     private int promptForPersonalityAnswer(int qNum) {
         while (true){
@@ -143,7 +147,7 @@ public class SurveyPrompter {
 
             //validations for the entered values
             if (answerStr.isEmpty()){
-                System.out.println("Invalid input.Please enter a number between 1-5.");
+                System.out.println("Invalid input.Please enter a number between 1-5:\n");
                 continue;
             }
 
@@ -153,13 +157,13 @@ public class SurveyPrompter {
 
                 //validation
                 if (ansValue < MIN_Q_SCORE || ansValue > MAX_Q_SCORE){
-                    System.out.println("Invalid input. Please enter a number between 1-5.");
+                    System.out.println("Invalid input. Please enter a number between 1-5:\n ");
                     continue;
                 }
                 return ansValue;
 
             }catch(NumberFormatException e){
-                System.out.println("Invalid input. Please enter a number between 1-5.");
+                System.out.println("Invalid input. Please enter a number between 1-5:\n ");
             }
         }
     }
@@ -181,19 +185,26 @@ public class SurveyPrompter {
     }
 
 
-
-
-
-
     //Interest
     public Interest promptForInterest() {
-        displayInterestMenu();
+        System.out.println("=======================================================");
+        System.out.println("                   INTEREST SELECTION                  ");
+        System.out.println("=======================================================");
+        System.out.println("Choose your preferred interest:");
+        System.out.println(" 1  : FIFA");
+        System.out.println(" 2  : CS:GO");
+        System.out.println(" 3  : Valorant");
+        System.out.println(" 4  : Dota 2");
+        System.out.println(" 5  : Chess");
+        System.out.println(" 6  : Basketball");
+        System.out.println("=======================================================");
+
         while (true) {
             String userInp = scanner.nextLine().trim();
 
             //vldations
             if (userInp.isEmpty()) {
-                System.out.println("Please enter a value between 1 and 6\n");
+                System.out.println("Please enter a value between 1 and 6: \n");
                 continue;
             }
 
@@ -203,32 +214,16 @@ public class SurveyPrompter {
                 Interest selectedInterest = mapValueToInterest(value);
 
                 if (selectedInterest == null) {
-                    System.out.println("Invalid choice. Please enter a value between 1 and 6\n");
+                    System.out.println("Invalid choice. Please enter a value between 1 and 6: \n");
                 }else  {
                     return selectedInterest;
                 }
 
             } catch (NumberFormatException e) {
-                System.out.println("Invalid choice. Please enter a value between 1 and 6\n");
+                System.out.println("Invalid choice. Please enter a value between 1 and 6: \n");
             }
         }
     }
-
-    private void displayInterestMenu() {
-        System.out.println("-------------------------------------------------------");
-        System.out.println("Please enter the number of your preferred interest:    ");
-        System.out.println("-------------------------------------------------------");
-        System.out.println("1 - FIFA");
-        System.out.println("2 - CS:GO");
-        System.out.println("3 - Valorant");
-        System.out.println("4 - Dota 2");
-        System.out.println("5 - Chess");
-        System.out.println("6 - Basketball");
-        System.out.println("-------------------------------------------------------");
-
-
-    }
-
     private Interest mapValueToInterest(int value) {
         return switch (value) {
             case 1 -> Interest.FIFA;
@@ -257,12 +252,12 @@ public class SurveyPrompter {
         System.out.println("=======================================================");
 
         while(true) {
-            System.out.print("Enter an experience level (1-10) : ");
+            System.out.print("Enter an experience level (1-10) :\n ");
             String userInp = scanner.nextLine().trim();
 
             //validations
             if (userInp.isEmpty()) {
-                System.out.println("Please enter a value between 1 and 10.");
+                System.out.println("Please enter a value between 1 and 10:\n ");
                 continue;
             }
 
@@ -270,7 +265,7 @@ public class SurveyPrompter {
             try{
                 int skillLevel = Integer.parseInt(userInp);
                 if (skillLevel < MIN_EXP_LEVEL || skillLevel > MAX_EXP_LEVEL) {
-                    System.out.println("Invalid range. Please enter a value between 1 and 10.");
+                    System.out.println("Invalid range. Please enter a value between 1 and 10:\n ");
                     continue;
                 }
 
@@ -281,11 +276,10 @@ public class SurveyPrompter {
                 return skillLevel;
 
             }catch (NumberFormatException e){
-                System.out.println("Invalid Input. Please enter a value between 1 and 10.");
+                System.out.println("Invalid Input. Please enter a value between 1 and 10:\n ");
             }
         }
     }
-
     //helper to map the val to category
     private String classifySkillLevel(int skillLevel) {
         if (skillLevel<=3){
@@ -302,13 +296,24 @@ public class SurveyPrompter {
 
     //Role section
     public Role promptForRole() {
+        System.out.println("=======================================================");
+        System.out.println("                   ROLE SELECTION                      ");
+        System.out.println("=======================================================");
+        System.out.println("Select your preferred role: ");
+        System.out.println(" 1 : Strategist");
+        System.out.println(" 2 : Attacker");
+        System.out.println(" 3 : Defender");
+        System.out.println(" 4 : Supporter");
+        System.out.println(" 5 : Coordinator");
+        System.out.println("=======================================================");
+        System.out.println("\nEnter your choice (1-5): ");
         while (true) {
-            displayRoleMenu();
+
             String input = scanner.nextLine().trim();
 
             // validations
             if (input.isEmpty()) {
-                System.out.println("Please enter a value between 1 and 5\n");
+                System.out.println("Please enter a value between 1 and 5:\n");
                 continue;
             }
 
@@ -318,30 +323,15 @@ public class SurveyPrompter {
                 Role chosenRole = traceValueToRole(numericChoice);
 
                 if (chosenRole == null) {
-                    System.out.println("❌ Invalid choice. Please enter a number between 1 and 5.\n");
+                    System.out.println("Invalid choice. Please enter a number between 1 and 5:\n");
                 }else{
                     return chosenRole;
                 }
             }  catch (NumberFormatException e) {
-                System.out.println("Invalid choice. Please enter a number between 1 and 5.\n");
+                System.out.println("Invalid choice. Please enter a number between 1 and 5:\n");
             }
         }
     }
-
-    private void displayRoleMenu() {
-        System.out.println("-------------------------------------------------------");
-        System.out.println("Please select your preferred role: ");
-        System.out.println("-------------------------------------------------------");
-        System.out.println("1 - Strategist");
-        System.out.println("2 - Attacker");
-        System.out.println("3 - Defender");
-        System.out.println("4 - Supporter");
-        System.out.println("5 - Coordinator");
-        System.out.println("-------------------------------------------------------");
-        System.out.println("\nEnter your choice (1-5): ");
-
-    }
-
     private Role traceValueToRole(int numericChoice) {
         return switch (numericChoice){
             case 1 -> Role.STRATEGIST;

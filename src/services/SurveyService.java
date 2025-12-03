@@ -20,9 +20,8 @@ public class SurveyService {
 
     // Survey Orchestration
     public void initiateSurvey() {
-        System.out.println("Welcome to the University Game Club Survey!");
-        System.out.println("Please answer the following questions " +
-                "to help us assign you to the best team!\n");
+        System.out.println(" 🎮 Welcome to the University Gaming Club Survey 🎮  ");
+        System.out.println("Please answer the following questions to help us assign you to the best team!\n");
 
         try{
             //generate ID
@@ -53,7 +52,8 @@ public class SurveyService {
                     selectedSkillLevel,
                     selectedRole,
                     score,
-                    personalityType);
+                    personalityType
+            );
 
             //Try to save it to CSV
             try{

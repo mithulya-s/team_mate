@@ -27,7 +27,7 @@ public class FormationController {
                 String userInp= scanner.nextLine().trim();
 
                 if (userInp.isEmpty()) {
-                    System.out.println("Team size cannot be empty. Please enter a valid team size.");
+                    System.out.println("Team size cannot be empty. Please enter a valid team size.\n");
                     continue;
                 }
 
@@ -40,7 +40,7 @@ public class FormationController {
 
                 if (teamSize > totalParticipants) {
                     System.out.println("Team size (" + teamSize + ") is larger than total participants (" + totalParticipants + ").");
-                    System.out.println("💡 Maximum team size is " + totalParticipants + ". Try again.\n");
+                    System.out.println("Maximum team size is " + totalParticipants + ". Try again.\n");
                     continue;
                 }
 
@@ -65,7 +65,7 @@ public class FormationController {
                  */
 
                 int expectedTeams = (int) Math.ceil((double) totalParticipants / teamSize);
-                System.out.println("This will create approximately " + expectedTeams + " teams.\n");
+                //System.out.println("This will create approximately " + expectedTeams + " teams.\n");
 
                 return teamSize;
 
@@ -93,7 +93,7 @@ public class FormationController {
                 );
 
         TeamBuilder.TeamFormationResult result =
-                runner.run(participants, teamSize);
+                runner.runFormationThreads(participants, teamSize);
 
         List<Team> formedTeams = result.getFormedTeams();
 
