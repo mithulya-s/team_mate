@@ -6,6 +6,17 @@ import utilities.PersonalityType;
 
 import java.util.*;
 
+/*
+This class:
+    - Contains the algorithm for forming balanced teams from participants
+    - Parallel team forming is handled through the formationRunner.
+    - Sorts participants by personality importance and skill.
+    - Assigns participants to teams based on scoring criteria.
+    - Pools leftover participants if they cannot be assigned.
+
+The scoring considers personality mix, interest diversity, role distribution,and skill balance to encourage fair and effective teams.
+ */
+
 public class TeamBuilder {
     private static final int TEAM_INTEREST_CAP = 2;
     private static final int MIN_ROLES_FOR_BIG_TEAMS = 3;
@@ -33,7 +44,10 @@ public class TeamBuilder {
         }
     }
 
-    // ===== Main method (single-threaded) =====
+    /*
+     Forms the teams from a list of participants.
+     */
+
     public static TeamFormationResult formTeams(List<Participant> participants, int teamSize) {
         List<Participant> pooled = new ArrayList<>();
 
@@ -49,7 +63,7 @@ public class TeamBuilder {
         List<Team> teams = new ArrayList<>();
 
         for (int i = 0; i < completeTeams; i++) {
-            teams.add(new Team(i + 1)); // create Team wrapper with team number
+            teams.add(new Team(i + 1));
         }
 
         if (teams.isEmpty()) {
@@ -57,7 +71,7 @@ public class TeamBuilder {
             return new TeamFormationResult(new ArrayList<>(), pooled);
         }
 
-        // Sort by personality importance (Leader → Thinker → Balanced) then by skill
+        // Sort by personality importance first, then by skill of the participant
         List<Participant> sorted = manageParticipantImportance(participants);
 
         int maxAssign = completeTeams * teamSize;
@@ -65,10 +79,10 @@ public class TeamBuilder {
         for (int i = 0; i < maxAssign; i++) {
             Participant p = sorted.get(i);
             int bestIndex = getBestTeamForParticipant(p, teams, teamSize);
-            teams.get(bestIndex).addMember(p); // add via Team API
+            teams.get(bestIndex).addMember(p);
         }
 
-        // Leftovers
+        // pool
         for (int i = maxAssign; i < sorted.size(); i++) {
             pooled.add(sorted.get(i));
         }
@@ -76,8 +90,9 @@ public class TeamBuilder {
         return new TeamFormationResult(teams, pooled);
     }
 
-    // ===== Helper methods (unchanged logic, adjusted types) =====
 
+
+    //Sorts the participants by the attributes for teaming.
     private static List<Participant> manageParticipantImportance(List<Participant> participants) {
         List<Participant> sorted = new ArrayList<>(participants);
 
@@ -92,7 +107,6 @@ public class TeamBuilder {
 
         return sorted;
     }
-
     private static int getPersonalityImportance(PersonalityType p) {
         if (p == null) return 999;
         return switch (p) {
@@ -102,7 +116,7 @@ public class TeamBuilder {
         };
     }
 
-    // teams is now List<Team>
+    //This finds the best team for a participant based on the scoring
     private static int getBestTeamForParticipant(Participant p, List<Team> teams, int teamSize) {
         int bestIndex = 0;
         double bestScore = Double.NEGATIVE_INFINITY;
@@ -112,7 +126,7 @@ public class TeamBuilder {
 
             if (t.size() >= teamSize) continue;
 
-            // compute score using team members list
+
             double score = computeTeamScore(p, t.getMembers(), teamSize);
             if (score > bestScore) {
                 bestScore = score;
@@ -120,10 +134,12 @@ public class TeamBuilder {
             }
         }
 
+        //considers the capacity and returns the index for optimal team
         return bestIndex;
     }
 
-    // helpers still operate on List<Participant> for minimal change
+    //Computes overall score for assigning a participant to a team.
+    // Considers perosnality match, interest diversity, role diversity, skill balance
     private static double computeTeamScore(Participant p, List<Participant> team, int teamSize) {
         double score = 0;
         score += scorePersonalityMatch(p, team, teamSize);
@@ -136,6 +152,7 @@ public class TeamBuilder {
         return score;
     }
 
+    // Scoring helpers
     private static double scoreInterestDiversity(Participant p, List<Participant> team) {
         long same = team.stream().filter(t -> t.getInterest() == p.getInterest()).count();
 
@@ -145,7 +162,6 @@ public class TeamBuilder {
 
         return 0;
     }
-
     private static double scoreRoleDiversity(Participant p, List<Participant> team, int teamSize) {
         long sameRole = team.stream().filter(t -> t.getRole() == p.getRole()).count();
         double score = (sameRole == 0 ? 80 : sameRole == 1 ? 20 : -40);
@@ -156,7 +172,6 @@ public class TeamBuilder {
 
         return score;
     }
-
     private static double scorePersonalityMatch(Participant p, List<Participant> team, int teamSize) {
         long leaders = team.stream().filter(t -> t.getPersonalityType() == PersonalityType.LEADER).count();
         long thinkers = team.stream().filter(t -> t.getPersonalityType() == PersonalityType.THINKER).count();
@@ -168,7 +183,6 @@ public class TeamBuilder {
             case BALANCED -> 100 - (balanced > teamSize / 2 ? 40 : 0);
         };
     }
-
     private static double scoreSkillBalance(Participant p, List<Participant> team) {
         if (team.isEmpty()) return 0;
 
