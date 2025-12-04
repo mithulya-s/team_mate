@@ -1,12 +1,12 @@
 package base;
 
-import utilities.Interest;
-import utilities.Role;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
+/*
+- Depicts a team formed from multiple participants.
+- Each team has a unique team number and a list of members.
+ */
 public class Team {
     private final int teamNumber;
     private final List<Participant> members;
@@ -24,36 +24,20 @@ public class Team {
         return members;
     }
 
+    //Adds the participant to the team if not null
     public void addMember(Participant participant) {
         if (participant != null) members.add(participant);
     }
 
+    //To get the current number of members in the team.
     public int size() {
         return members.size();
     }
 
-
-   /*
-    public boolean isFull(int teamSize) {
-        return size() >= teamSize;
-    }
-
-    public double averageSkill() {
-        return members.stream().mapToInt(Participant::getSkillLevel).average().orElse(0.0);
-    }
-
-    public Set<Role> uniqueRoles() {
-        return members.stream().map(Participant::getRole).collect(Collectors.toSet());
-    }
-
-    public Set<Interest> uniqueInterests() {
-        return members.stream().map(Participant::getInterest).collect(Collectors.toSet());
-    }
-
-     */
-
+    //For display
     @Override
     public String toString() {
-        return "Team " + teamNumber + " (" + size() + " members)";
+        return
+                "Team " + teamNumber + " (" + size() + " members)";
     }
 }
