@@ -7,6 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 
+/*
+ - This class encapsulates the result of processing a participant CSV file.
+ - Further:
+    - Stores valid Participant objects parsed from the file.
+    - Collects warnings mapped to row numbers for invalid or malformed data.
+
+    - Fields are final and exposed only through getters.
+    - Defensive copies ensures null inputs are replaced with empty collections.
+    - Provides unmodifiable access to warnings to preserve integrity across
+ */
+
 public class ProcessCsvResult {
 
     private final List<Participant> validParticipants;
@@ -26,14 +37,4 @@ public class ProcessCsvResult {
         return Collections.unmodifiableMap(warningsByRow);
     }
 
-    /*
-    public boolean hasWarnings() {
-        return !warningsByRow.isEmpty();
-    }
-
-    public boolean hasValidParticipants() {
-        return !validParticipants.isEmpty();
-    }
-
-     */
 }
