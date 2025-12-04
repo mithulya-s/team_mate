@@ -7,6 +7,8 @@ import csv.TeamCsvReader;
 import java.util.List;
 import java.util.Scanner;
 
+
+//Provides lookup functionality for participants to find their assigned team.
 public class ParticipantLookup {
 
     private final Scanner scanner;
@@ -15,13 +17,25 @@ public class ParticipantLookup {
         this.scanner = scanner;
     }
 
+    /*
+     Functionality to:
+        - Orchestrate the participant lookup flow:
+             - Load team data from CSV.
+             - Prompt for participant ID and validate format.
+             - Find participant and their team, then display assignment details.
+             - Handle missing files or invalid IDs gracefully.
+     */
+
     public void manageLookupFlow(List<Team> formedTeams) {
-        System.out.println("Welcome to participant search.");
+        System.out.println("\n======================================================================");
+        System.out.println("                            PARTICIPANT SEARCH                           ");
+        System.out.println("======================================================================  ");
 
         try {
+            //Read the formed team file and get the teams
             formedTeams = new TeamCsvReader().readDefaultFile();
             if (formedTeams == null || formedTeams.isEmpty()) {
-                System.out.println("Sorry. Teams have not been formed yet.");
+                System.out.println("Sorry,teams have not been formed yet.Please check back later.\n");
                 return;
             }
         } catch (Exception e) {
@@ -50,14 +64,14 @@ public class ParticipantLookup {
 
                 System.out.println("\nTeam Assignment Found");
                 System.out.println("===============================================================================");
-                System.out.println("You are assigned to Team " + assignedTeam.getTeamNumber());
-                System.out.println("===============================================================================");
-                System.out.println("\n Teammates:");
+                System.out.println("You are assigned to TEAM NO: " + assignedTeam.getTeamNumber());
+                System.out.println("Teammates:");
                 System.out.println("===============================================================================");
 
                 for (Participant p : assignedTeam.getMembers()) {
                     if (p == null) continue;
 
+                    // Clean display with the participant who entered the ID, emphasized.
                     if (p.getId().equalsIgnoreCase(participantId)) {
                         System.out.printf(" • %s (You)\n", p.getFullName());
                     } else {
@@ -70,17 +84,18 @@ public class ParticipantLookup {
                     );
                 }
 
-                System.out.println("\n============================================================================");
+                System.out.println("============================================================================\n");
             }
             else {
-                System.out.println("\n No team assignment found for ID: " + participantId);
+                System.out.println("\n No team assignment found for provided ID: " + participantId);
             }
 
         } catch (Exception e) {
-            System.err.println("An error occurred during lookup." + e.getMessage());
+            System.out.println("An error occurred during lookup." + e.getMessage());
         }
     }
 
+    //Searches all teams to locate participant
     private Participant findParticipantInTeams(String id, List<Team> formedTeams) {
         if (id == null || formedTeams == null || formedTeams.isEmpty()) {
             return null;
@@ -100,7 +115,7 @@ public class ParticipantLookup {
         return null;
     }
 
-    // Returns the Team object, not List<Participant>
+    // Find the team that includes the given participant ID
     private Team findTeamByParticipant(String id, List<Team> formedTeams) {
         if (id == null || id.trim().isEmpty()) return null;
         if (formedTeams == null || formedTeams.isEmpty()) return null;
