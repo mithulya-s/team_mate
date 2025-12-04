@@ -9,70 +9,87 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+/*
+ - This class :
+    - Provides organizer-side functionality for managing team formation.
+        - Loads participant records from CSV.
+        - Validates and handles file warnings.
+        - Delegates team formation to FormationController.
+        - Displays and exports formed teams.
+ */
 
 public class OrganizerService {
     private final Scanner scanner;
     private final ParticipantCsvReader csvReader = new ParticipantCsvReader();
 
-    // Constructor
+
     public OrganizerService(Scanner scanner) {
         this.scanner = scanner;
     }
 
     // Formation methods
 
-    // Form and return teams
+    /*
+     To orchestrate the team formation flow which:
+       - Prompts for participant file path.
+       - Loads and validates participant data.
+       - Delegates team formation to FormationController.
+       - Displays results and returns formed teams.
+     */
     public List<Team> manageFormationFlow() {
-        System.out.println("Welcome to Organizer CLI");
-        System.out.println("===========================================================");
+        System.out.println("\n================================================================================  ");
+        System.out.println("                              TEAM FORMATION                                        ");
+        System.out.println("================================================================================    ");
 
         try {
-            // calling helper to file path
+
             String filePath = promptForPath();
 
+            //get participant file read and participant objects built
             List<Participant> compiledParticipants = loadParticipants(filePath);
 
+
             if (compiledParticipants == null || compiledParticipants.isEmpty()) {
-                System.out.println("\n❌ No valid participants found in the file.");
-                System.out.println("💡 Please check the file format and try again.\n");
+                System.out.println("\nNo valid participants found in the file.");
+                System.out.println("Please check the file format and try again.\n");
                 return new ArrayList<>();
             }
 
-            // calling the team formation and getting the formed teams.
-            FormationController formationController = new FormationController(scanner);
 
+            // calling team formation and getting the formed teams.
+            FormationController formationController = new FormationController(scanner);
             int teamSize = formationController.promptForTeamSize(compiledParticipants.size());
 
+            //Formed team list
             List<Team> formedTeams = formationController.callFormTeams(compiledParticipants, teamSize);
 
             if (formedTeams == null || formedTeams.isEmpty()) {
-                System.out.println("\n❌ Team formation could not be completed.");
-                System.out.println("💡 Please check participant data and try again.\n");
+                System.out.println("\nTeam formation could not be completed.");
+                System.out.println("Please check participant data and try again.\n");
                 return new ArrayList<>();
             }
 
-            displayTeamDetailsOnly(formedTeams); // for the last steps, no instance because in the same class
+            displayTeamDetailsOnly(formedTeams); // display only, with the exporting options added separately
             System.out.println("If you want to save the formed teams, please select option no.2 in the menu below.");
             return formedTeams;
 
         } catch (Exception e) {
-            System.err.println("\n❌ An unexpected error occurred in organizer flow:");
-            System.err.println("   " + e.getMessage());
-            System.out.println("💡 Please try again or contact support.\n");
+            System.out.println("\nAn unexpected error occurred while flow is executed.");
+            System.out.println("   " + e.getMessage());
             return new ArrayList<>();
         }
 
     }
 
-    // Get file path
+
     public String promptForPath() {
         while (true) {
-            System.out.print("Enter the path to participant records (or press Enter to use default file): ");
+            System.out.print("Enter the path to participant records (or press ENTER to use default file):  ");
             String input = scanner.nextLine().trim();
 
             if (input.isEmpty()) {
                 String defaultFile = "participants.csv";
-                System.out.println("✅ Using default file: " + defaultFile);
+                System.out.println("Using default file: " + defaultFile);
                 return defaultFile;
             }
 
@@ -82,28 +99,27 @@ public class OrganizerService {
             }
 
             if (!input.toLowerCase().endsWith(".csv")) {
-                System.out.println(" Warning: File doesn't have .csv extension. Continuing anyway...");
+                System.out.println(" Warning: File doesn't have .csv extension. Continuing anyway.\n");
             }
-
             return input;
         }
 
     }
 
-    // Process file and load participant objects
+    // To load participants from the given CSV file and stores warnings for issues.
     public List<Participant> loadParticipants(String filePath) {
         if (filePath == null || filePath.trim().isEmpty()) {
-            System.err.println("❌ Error: File path cannot be empty.");
+            System.out.println("File path cannot be empty.");
             return new ArrayList<>();
         }
 
-        System.out.println("\n📂 Loading participants from: " + filePath + "...");
+        System.out.println("\nLoading participants from: " + filePath + "...");
 
         try {
-            ProcessCsvResult result = csvReader.readFromCsv(filePath); //1.3 & 1.3.16 (return)
+            ProcessCsvResult result = csvReader.readFromCsv(filePath);
 
             if (result == null) {
-                System.err.println("❌ Error: Failed to read file.");
+                System.out.println("Failed to read provided file.Please check the file content and format.");
                 return new ArrayList<>();
             }
 
@@ -112,9 +128,9 @@ public class OrganizerService {
 
             if (warningsByRow != null && !warningsByRow.isEmpty()) {
                 System.out.println("\n⚠️  Errors detected in participant file:");
-                System.out.println("═══════════════════════════════════════════════════════");
+                System.out.println("====================================================================================================");
 
-                // Print file-level warnings (-1) first (if present), then per-row warnings
+                //Getting the warnings saved, on a loop to be printed
                 if (warningsByRow.containsKey(-1)) {
                     List<String> fileWarnings = warningsByRow.get(-1);
                     if (fileWarnings != null && !fileWarnings.isEmpty()) {
@@ -122,42 +138,41 @@ public class OrganizerService {
                         for (String msg : fileWarnings) {
                             System.out.println("  - " + msg);
                         }
-                        System.out.println("───────────────────────────────────────────────────────");
+                        System.out.println("====================================================================================================");
                     }
                 }
 
-                // Print row-specific warnings in insertion order (ParticipantCsvReader uses LinkedHashMap)
+                // Print row-specific warnings in inserted order sent from the file reader
                 for (Map.Entry<Integer, List<String>> entry : warningsByRow.entrySet()) {
                     int row = entry.getKey();
-                    if (row == -1) continue; // already handled
+                    if (row == -1) continue;
                     List<String> msgs = entry.getValue();
                     if (msgs != null && !msgs.isEmpty()) {
                         System.out.println("Row " + row + ": " + String.join("; ", msgs));
                     }
                 }
 
-                System.out.println("═══════════════════════════════════════════════════════");
+                System.out.println("====================================================================================================");
             }
 
             if (participants == null || participants.isEmpty()) {
-                System.out.println("\n❌ No valid participants found.");
+                System.out.println("\nNo valid participants found.");
                 return new ArrayList<>();
             }
 
-            System.out.println("✅ Successfully loaded " + participants.size() + " valid participant(s).\n");
+            System.out.println("\nSuccessfully loaded " + participants.size() + " valid participant(s).");
             return participants;
 
         } catch (Exception e) {
-            System.err.println("\n❌ Error loading participants:");
-            System.err.println("   " + e.getMessage());
-            System.out.println("💡 Please check the file path and format.\n");
+            System.out.println("\nError loading participants from the provided file.");
+            System.out.println("   " + e.getMessage());
+            System.out.println("Please check the file path and format.\n");
             return new ArrayList<>();
         }
     }
 
-    // Display only
     public void displayTeamDetailsOnly(List<Team> formedTeams) {
-        // reuse my helper
+        // reuse the display helper
         displayTeams(formedTeams);
     }
 
@@ -170,6 +185,8 @@ public class OrganizerService {
 
 
     // Save formed teams methods
+
+    //Save, display formed teams and to export them to CSV.
     public void displayAndExportTeams(List<Team> formedTeams) {
         if (formedTeams == null || formedTeams.isEmpty()) {
             System.out.println("No teams formed yet. Please form teams first.");
@@ -179,7 +196,6 @@ public class OrganizerService {
         try {
             displayTeams(formedTeams);
 
-            // Asking whether he wants it exported.
             System.out.print("Would you like to export these teams to a CSV file? (Y/N): ");
             String exportInp = scanner.nextLine().trim().toLowerCase();
 
@@ -188,31 +204,31 @@ public class OrganizerService {
                     TeamsCsvWriter.writeTeamsToCsv(formedTeams);
                     System.out.println("Teams exported successfully!\n");
                 } catch (Exception e) {
-                    System.err.println("Failed to write formed teams to CSV:");
-                    System.err.println("   " + e.getMessage());
-                    System.out.println("💡 Teams are formed, but could not write to CSV. failed.\n");
+                    System.out.println("Failed to write formed teams to CSV:");
+                    System.out.println("Teams are formed, but could not write to CSV.\n");
                 }
             } else {
                 System.out.println("Exporting to CSV skipped.\n");
             }
 
         } catch (Exception e) {
-            System.err.println(" Error writing to teams to file:");
-            System.err.println("   " + e.getMessage());
+            System.out.println("Error writing to teams to file:");
+            System.out.println("   " + e.getMessage());
         }
 
     }
 
 
-    // General helper to formatted display
+    // Reusable displayer to display teams in a formatted output.
     private static void displayTeams(List<Team> formedTeams) {
         if (formedTeams == null || formedTeams.isEmpty()) {
-            System.out.println("\n⚠️ No teams formed yet. Please form teams first");
+            System.out.println("\nNo teams formed yet. Please form teams first");
             return;
         }
 
-        System.out.println("\n📊 Formed Teams:");
-        System.out.println("═══════════════════════════════════════════════════════");
+        System.out.println("\n====================================================================================================================");
+        System.out.println("                                                FORMED TEAMS                                                         ");
+        System.out.println("====================================================================================================================");
 
         int teamCount = 0;
 
@@ -223,9 +239,9 @@ public class OrganizerService {
             }
 
             teamCount++;
-            System.out.println("\n🏆 Team " + team.getTeamNumber()
+            System.out.println("\nTEAM " + team.getTeamNumber()
                     + " (" + team.size() + " members):");
-            System.out.println("───────────────────────────────────────────────────────");
+            System.out.println("--------------------------------------------------------------------------------------------------------------------");
 
             for (Participant p : team.getMembers()) {
                 if (p == null) continue;
@@ -242,13 +258,13 @@ public class OrganizerService {
                             p.getPersonalityType()
                     );
                 } catch (Exception e) {
-                    System.out.println("  • [Error displaying participant: " + e.getMessage() + "]");
+                    System.out.println("    [Error displaying participant: " + e.getMessage() + "]");
                 }
             }
         }
 
-        System.out.println("\n═══════════════════════════════════════════════════════");
-        System.out.println("Total teams displayed: " + teamCount);
-        System.out.println("═══════════════════════════════════════════════════════\n");
+        System.out.println("\n====================================================================================================================");
+        System.out.println("    Total number of teams displayed: " + teamCount);
+        System.out.println("====================================================================================================================\n");
     }
 }
