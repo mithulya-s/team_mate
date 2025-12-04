@@ -14,7 +14,8 @@ This class:
     - Assigns participants to teams based on scoring criteria.
     - Pools leftover participants if they cannot be assigned.
 
-The scoring considers personality mix, interest diversity, role distribution,and skill balance to encourage fair and effective teams.
+The scoring considers personality mix, interest diversity, role distribution,
+        and skill balance to encourage fair and effective teams.
  */
 
 public class TeamBuilder {
