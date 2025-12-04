@@ -9,41 +9,52 @@ import utilities.Role;
 
 import java.util.Scanner;
 
+
+/*
+ This class:
+    - Handles the survey process for participants.
+    - Guides the user through survey prompts.
+    - Validates and constructs a Participant object.
+ - This class acts as a controller, delegating input collection to SurveyPrompter and storage to ParticipantCsvWriter.
+ */
+
 public class SurveyService {
     private final Scanner scanner;
 
-    // Constructor
     public SurveyService(Scanner scanner) {
         this.scanner = scanner;
     }
 
 
-    // Survey Orchestration
+    /*
+     This orchestrates the full survey flow:
+        - Unique ID generation
+        - Prompts the user for survey inputs.
+        - Builds the validated Participant object.
+        - Saves the participant to CSV.
+        - Gives user-friendly feedback and error handling.
+     */
+
     public void initiateSurvey() {
-        System.out.println(" 🎮 Welcome to the University Gaming Club Survey 🎮  ");
-        System.out.println("Please answer the following questions to help us assign you to the best team!\n");
+        System.out.println("\nWelcome to the University gaming club Survey!");
+        System.out.println("Please answer the following questions to help us assign you to the best team.\n");
 
         try{
-            //generate ID
+            //Generate unique ID
             String participantId = IdGenerator.getInstance().generateNextId();
 
-            //prmopter instance
+            // Collect survey inputs via the helper class methods
             SurveyPrompter prompter = new SurveyPrompter(scanner);
-
-            //Get the inputs
             String enteredFullName =prompter.promptForFullName();
             String enteredEmail =prompter.promptForEmail();
-
-            //PersonalityScorer personalityScorer = new PersonalityScorer(scanner);
             int score=prompter.promptForPersonality();
             PersonalityType personalityType= prompter.classifyPersonalityType(score);
-
             Interest selectedInterest = prompter.promptForInterest();
             int selectedSkillLevel =prompter.promptForSkillLevel();
             Role selectedRole=prompter.promptForRole();
 
 
-            //Build the particapnt
+            //Build the participant object, with the constructor enforcing validation
             Participant participant= new Participant(
                     participantId,
                     enteredFullName,
@@ -55,40 +66,39 @@ public class SurveyService {
                     personalityType
             );
 
-            //Try to save it to CSV
+
+            //Attempt to write the participant data to csv
             try{
                 ParticipantCsvWriter writer = new ParticipantCsvWriter();
                 writer.saveParticipantToCsv(participant);
 
 
-                //Sucess with writing the participant to the CSV
-                System.out.println("\n✅ Survey completed successfully!");
-                System.out.println("📋 Your participant ID is: " + participant.getId());
+                //Feedback for success
+                System.out.println("\n✔️ Survey completed successfully!");
+                System.out.println("✔️ Response has been securely saved.");
+                System.out.println("📋 Your participant ID is : " + participant.getId());
                 System.out.println("💡 Please save this ID — you'll need it to view your assigned team later.");
-                System.out.println("✅ Response has been securely saved!");
-                System.out.println("\nThank you. Have a wonderful day!");
+
+                System.out.println("⭐ Thank you!");
 
             } catch (Exception csvWriteError){
-                //If writing failed but the participant was created.
-                System.err.println("\n⚠️ Warning: Survey completed but failed to write to file.");
-                System.err.println("Error details: " + csvWriteError.getMessage());
+                //Participant was created but writing failed.
+                System.out.println("\n⚠️ Warning: Survey completed but failed to write to file.");
                 System.out.println("\n📋 Your participant ID is: " + participant.getId());
-                System.out.println("💡 Please save this ID and contact an organizer.");
+                System.out.println("❕Please save this ID and contact an administrator.");
 
             }
 
 
         } catch (IllegalArgumentException validationError){
-            //Participant creation failed due to raised validations
-            System.err.println("\n❌ Failed to create participant profile.");
-            System.err.println("Error: " + validationError.getMessage());
+            //Participant creation failed due to invalid inputs
+            System.out.println("\nFailed to create participant profile.");
             System.out.println("Please try filling the survey again.");
 
 
         }catch (Exception sysError){
-            // Something else with the system went wrong
-            System.err.println("\n❌ An unexpected error occurred during the survey.");
-            System.err.println("Error details: " + sysError.getMessage());
+            // Unexpected sys errors
+            System.out.println("\nAn unexpected error occurred during the survey.");
             System.out.println("Please try again or contact support.");
         }
     }
