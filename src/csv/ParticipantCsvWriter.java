@@ -8,11 +8,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+
+/*
+ - This handles writing participant records to a CSV file.
+ - Implements CsvWritable<Participant> to provide a consistent contract for persistence.
+ - Exceptions are sent to SurveyService, which handles user-friendly messaging.
+ */
+
 public class ParticipantCsvWriter implements CsvWritable<Participant> {
     private static final String FILE_PATH = "participants.csv";
     private static final String HEADER_LINE =
             "ID,Name,Email,PreferredGame,SkillLevel,PreferredRole,PersonalityScore,PersonalityType";
 
+    // Exceptions throw here will be caught by the SurveyService and will be printed in a user-friendly message.
     @Override
     public void writeToCsv(List<Participant> participants, String filePath) throws IOException {
         if (participants == null || participants.isEmpty()) {
@@ -44,7 +52,7 @@ public class ParticipantCsvWriter implements CsvWritable<Participant> {
         }
     }
 
-    // Convenience method if you want to save a single participant (like your old version)
+    // Helper method to save a single participant
     public void saveParticipantToCsv(Participant participant) throws IOException {
         writeToCsv(List.of(participant), FILE_PATH);
     }
@@ -63,7 +71,7 @@ public class ParticipantCsvWriter implements CsvWritable<Participant> {
         );
     }
 
-    // Escape values with special characters
+    // To escapes commas, quotes, and newlines for an uncorrupted line without parsing errors
     private static String escapeCsvValue(String value) {
         if (value == null) {
             return "";
@@ -75,11 +83,4 @@ public class ParticipantCsvWriter implements CsvWritable<Participant> {
         return value;
     }
 
-    /*
-    // Convenience method to check if file exists
-    public static boolean fileExists() {
-        return new File(FILE_PATH).exists();
-    }
-
-     */
 }
