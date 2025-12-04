@@ -14,8 +14,16 @@ import java.util.*;
 import java.util.concurrent.*;
 
 
+/*
+ - This reads participant data from a CSV file and builds Participant objects.
+ - Implements CsvReadable<ProcessCsvResult> to provide a consistent reading interface.
+ - Concurrency is used to improve performance when handling the file.
+ - This returns ProcessCsvResult, which ensures separation of concerns.
+ */
+
 public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
-    // thread pool configuration
+
+    // Thread pool
     private static final int THREAD_POOL_SIZE = 4;
 
     @Override
@@ -23,7 +31,7 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
         List<Participant> validParticipants = Collections.synchronizedList(new ArrayList<>());
         Map<Integer, List<String>> warningsByRow = Collections.synchronizedMap(new LinkedHashMap<>());
 
-        // basic path checks -> add file-level warnings using row key -1
+
         if (path == null || path.trim().isEmpty()) {
             warningsByRow.put(-1, List.of("File path cannot be empty."));
             return new ProcessCsvResult(validParticipants, warningsByRow);
@@ -34,7 +42,7 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
             return new ProcessCsvResult(validParticipants, warningsByRow);
         }
 
-        // read lines (skip header)
+        // read all the lines skipping the header
         List<String> allRows = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String row;
@@ -58,19 +66,21 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
             return new ProcessCsvResult(validParticipants, warningsByRow);
         }
 
-        System.out.println("🧵 Processing " + allRows.size() + " rows using " + THREAD_POOL_SIZE + " threads...");
+        System.out.println("Processing " + allRows.size() + " rows...");
 
         ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
         List<Future<RowProcessingResult>> futures = new ArrayList<>();
 
+        //submit the row processing tasks
         for (int i = 0; i < allRows.size(); i++) {
-            final int rowNumber = i + 2; // account for header row
+            final int rowNumber = i + 2; //accounts for the header line
             final String row = allRows.get(i);
 
             Future<RowProcessingResult> future = executor.submit(() -> processRowInThread(row, rowNumber));
             futures.add(future);
         }
 
+        //collect the results
         for (Future<RowProcessingResult> future : futures) {
             try {
                 RowProcessingResult result = future.get();
@@ -80,7 +90,7 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
                 }
 
                 if (result.warnings != null && !result.warnings.isEmpty()) {
-                    // keep the warnings keyed by row number
+                    // keep the warnings keyed by row num so could be accessed later
                     warningsByRow.put(result.rowNumber, new ArrayList<>(result.warnings));
                 }
 
@@ -92,7 +102,7 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
             }
         }
 
-        // shutdown
+        // shutdown the executor, force shut if it doesn't stop after the given time.
         executor.shutdown();
         try {
             if (!executor.awaitTermination(40, TimeUnit.SECONDS)) {
@@ -104,19 +114,13 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
             Thread.currentThread().interrupt();
         }
 
-        System.out.println("✅ Parallel processing complete!");
+        System.out.println("Parallel processing complete.");
         return new ProcessCsvResult(validParticipants, warningsByRow);
     }
 
 
 
-
-
-
-
-
-
-    // helper used by threads
+    // helper used by the threads
     private RowProcessingResult processRowInThread(String line, int rowNumber) {
         try {
             String[] cols = line.split(",", -1);
@@ -142,7 +146,13 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
         }
     }
 
-    // small helper to carry thread results
+
+    /*
+    - Represents the result of processing a single row from a CSV or survey input.
+    - Holds the created Participant object, the row number being processed,and any
+        validation or parsing warnings encountered during that row.
+     */
+
     private static class RowProcessingResult {
         final Participant participant;
         final int rowNumber;
@@ -155,8 +165,8 @@ public class ParticipantCsvReader implements CsvReadable<ProcessCsvResult> {
         }
     }
 
-    // --------------------- parsing & validation helpers ---------------------
 
+    // Parsing and validation helpers
     private Participant parseRow(String[] line, List<String> warnings) {
         if (line == null || line.length != 8) {
             warnings.add("Expected 8 columns, found " + (line == null ? 0 : line.length));
