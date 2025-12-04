@@ -9,18 +9,29 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+
+
+/*
+ - This handles writing formed teams to a CSV file.
+ - Implements CsvWritable<Team> to enforce a consistent persistence contract.
+ - This exports all teams and their members to "formed_teams.csv".
+ - Exceptions are sent to OrganizerService, which manages user-facing error handling.
+ */
+
 public class TeamsCsvWriter implements CsvWritable<Team> {
     private static final String FILENAME = "formed_teams.csv";
 
+    // All exception thrown from here will be caught and handled by the OrganizerService methods.
     @Override
     public void writeToCsv(List<Team> formedTeams, String filePath) throws IOException {
         if (formedTeams == null || formedTeams.isEmpty()) {
-            throw new IllegalArgumentException("No teams to write. Teams list is empty.");
+            throw new IllegalArgumentException("No teams to write. Formed teams list is empty.");
         }
 
         File file = new File(filePath);
 
         try (PrintWriter fileWriter = new PrintWriter(new FileWriter(file))) {
+            //Writing the header
             fileWriter.println("TeamNumber,ParticipantID,Name,Email,Interest,SkillLevel,Role,PersonalityScore,PersonalityType");
 
             int teamsWritten = 0;
@@ -37,6 +48,7 @@ public class TeamsCsvWriter implements CsvWritable<Team> {
                 for (Participant p : team.getMembers()) {
                     if (p == null) continue;
 
+                    //writing a single participant with their team details
                     try {
                         fileWriter.printf("%d,%s,%s,%s,%s,%d,%s,%d,%s%n",
                                 teamNumber,
@@ -50,8 +62,10 @@ public class TeamsCsvWriter implements CsvWritable<Team> {
                                 p.getPersonalityType()
                         );
                         participantsWritten++;
+
                     } catch (Exception e) {
-                        System.err.println("⚠️ Warning: Could not write participant " + (p != null ? p.getId() : "[null]") + ": " + e.getMessage());
+                        System.out.println("⚠️ Warning: Could not write participant " +
+                                (p != null ? p.getId() : "[null]") + ": " + e.getMessage());
                     }
                 }
             }
@@ -60,15 +74,15 @@ public class TeamsCsvWriter implements CsvWritable<Team> {
                 throw new IOException("Error occurred while writing to file");
             }
 
-            System.out.println("\n✅ Successfully wrote " + teamsWritten + " team(s) with "
+            System.out.println("Successfully wrote " + teamsWritten + " team(s) with "
                     + participantsWritten + " participant(s) to: " + filePath);
 
         } catch (IOException e) {
-            throw new IOException("Failed to write teams to CSV file: " + e.getMessage(), e);
+            throw new IOException("Failed to write teams to CSV file: " + e.getMessage());
         }
     }
 
-    // Convenience method to use default filename
+    // Helper method to use default filename
     public static void writeTeamsToCsv(List<Team> formedTeams) throws IOException {
         new TeamsCsvWriter().writeToCsv(formedTeams, FILENAME);
     }
