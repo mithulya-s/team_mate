@@ -11,6 +11,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+/*
+ - This class Reads formed team data from a CSV file and reconstructs Team objects.
+ - Implements CsvReadable<List<Team>> to provide a consistent reading interface.
+ - LinkedHashMap is sued to preserve team order.
+ - Parsing logic is encapsulated so it keep the file handling separate.
+ */
+
 public class TeamCsvReader implements CsvReadable<List<Team>> {
     private static final String DEFAULT_FILE_PATH = "formed_teams.csv";
 
@@ -30,12 +37,13 @@ public class TeamCsvReader implements CsvReadable<List<Team>> {
                 }
                 if (line.trim().isEmpty()) continue;
 
-                // NOTE: this uses simple comma split like your original reader.
-                // If you expect quoted fields with commas, replace with a proper CSV parser.
+
                 String[] cols = line.split(",", -1);
-                if (cols.length < 9) continue; // skip malformed rows
+                // skip malformed rows
+                if (cols.length < 9) continue;
 
                 try {
+                    //Parse the columns sequentially from the formed team file
                     int teamNumber = Integer.parseInt(cols[0].trim());
                     String id = cols[1].trim();
                     String name = cols[2].trim();
@@ -46,26 +54,35 @@ public class TeamCsvReader implements CsvReadable<List<Team>> {
                     int personalityScore = Integer.parseInt(cols[7].trim());
                     PersonalityType personalityType = PersonalityType.valueOf(cols[8].trim());
 
+                    //Build the participant through the validated constructor
                     Participant participant = new Participant(
-                            id, name, email, interest, skillLevel, role, personalityScore, personalityType
+                            id,
+                            name,
+                            email,
+                            interest,
+                            skillLevel,
+                            role,
+                            personalityScore,
+                            personalityType
                     );
 
                     Team team = teamMap.computeIfAbsent(teamNumber, k -> new Team(teamNumber));
+
                     team.addMember(participant);
 
-                } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
-                    // Skip malformed row but log a warning for debugging
-                    System.err.println("⚠️ Skipping malformed row: \"" + line + "\" — " + ex.getCause());
+                } catch (IllegalArgumentException | IndexOutOfBoundsException except) {
+                    //Catch corrupted rows silently and continue, since participant doesn't need corrupted row info.
+                    // Lookup will handle missing assigment gracefully.
+
                 }
             }
         } catch (IOException e) {
-            System.err.println("❌ Error reading formed teams CSV: " + e.getMessage());
+            System.out.println("Error reading formed teams CSV: " + e.getCause());
         }
 
         return new ArrayList<>(teamMap.values());
     }
 
-    // convenience method for default path
     public List<Team> readDefaultFile() {
         return readFromCsv(DEFAULT_FILE_PATH);
     }
