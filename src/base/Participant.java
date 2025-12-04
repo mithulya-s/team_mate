@@ -4,7 +4,14 @@ import utilities.Interest;
 import utilities.PersonalityType;
 import utilities.Role;
 
+/*
+ - Represents a single participant in the university gaming club.
+ - Stores personal details, preferences, and survey responses used for team formation.
+ - Includes validation logic in the constructor to ensure data integrity.
+ */
+
 public class Participant {
+    // Private fields for encapsulation
     private  String id;
     private  String fullName;
     private  String email;
@@ -15,13 +22,11 @@ public class Participant {
     private  PersonalityType personalityType;
 
 
-
-    //Constructor to keep data integrity by validations as well.
     public Participant(String id, String fullName, String email,
                        Interest interest, int skillLevel, Role role, int personalityScore,
                        PersonalityType personalityType) {
 
-        //Validations to keep invalid data out
+        // Validate inputs before assignment
         validateId(id);
         validateFullName(fullName);
         validateEmail(email);
@@ -29,13 +34,13 @@ public class Participant {
         validatePersonalityScore(personalityScore);
 
         if (interest == null) {
-            throw new IllegalArgumentException("Interest cannot be null");
+            throw new IllegalArgumentException("Interest cannot be null.");
         }
         if (role == null) {
-            throw new IllegalArgumentException("Role cannot be null");
+            throw new IllegalArgumentException("Role cannot be null.");
         }
         if (personalityType == null) {
-            throw new IllegalArgumentException("Personality type cannot be null");
+            throw new IllegalArgumentException("Personality type cannot be null.");
         }
 
         this.id=id;
@@ -46,10 +51,9 @@ public class Participant {
         this.role=role;
         this.personalityScore=personalityScore;
         this.personalityType=personalityType;
-
     }
 
-    //Getters only, no setters since the fields are immutable.
+    // Getters for participant attributes
     public String getId() {return id;}
     public String getFullName() {return fullName;}
     public String getEmail() {return email;}
@@ -59,8 +63,6 @@ public class Participant {
     public Role getRole() {return role;}
     public int getSkillLevel() {return skillLevel;}
 
-
-    //setters obv which we never use
 
     public void setId(String id) {this.id = id;}
     public void setFullName(String fullName) {this.fullName = fullName;}
@@ -73,7 +75,10 @@ public class Participant {
 
 
 
-    // Helpers to validate
+    //The exceptions raised in this constructor will be caught from the SurveyService class and a user-friendly
+    //message will be printed mentioning the error.
+
+    // Validation helpers (throw exceptions if invalid)
     private void validateId(String id) {
         if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("ID cannot be null or empty");
@@ -106,7 +111,6 @@ public class Participant {
     }
 
 
-    //Method override s
     @Override
     public String toString() {
         return String.format("Participant" +
