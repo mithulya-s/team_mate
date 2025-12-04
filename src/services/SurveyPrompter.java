@@ -54,12 +54,6 @@ public class SurveyPrompter {
                 continue;
             }
 
-            if (!name.matches("[a-zA-Z\\s.'-]+")) {
-                System.out.println("Name can only contain letters, spaces, apostrophes ('), hyphens (-), or dots (.)\n");
-                continue;
-            }
-
-
             return name;
         }
     }
