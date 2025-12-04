@@ -6,10 +6,20 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+
+/*
+ Executes multiple concurrent attempts at team formation.
+ This class:
+    - Runs formation tasks across threads with randomized shuffling.
+    - Collects results and selects the best team distribution.
+    - Concurrency is used to form balanced and component teams.
+    - ExecutorService is used for controlled parallel execution.
+ */
+
 public class FormationRunner {
 
-    private final int attempts; // how many independent solutions to try
-    private final int threads;  // thread pool size
+    private final int attempts;
+    private final int threads;
     private final long baseSeed;
 
     public FormationRunner(int attempts, int threads) {
@@ -17,6 +27,12 @@ public class FormationRunner {
         this.threads = threads;
         this.baseSeed = System.nanoTime();
     }
+
+
+    /*
+     - This runs multiple team formation attempts in parallel.
+     - Each attempt shuffles participants with a different seed and finally collects results and picks the best distribution.
+     */
 
     public TeamBuilder.TeamFormationResult runFormationThreads(List<Participant> participants, int teamSize) {
         ExecutorService pool = Executors.newFixedThreadPool(threads);
@@ -33,8 +49,7 @@ public class FormationRunner {
         }
 
         try {
-            List<Future<TeamBuilder.TeamFormationResult>> futures =
-                    pool.invokeAll(tasks);
+            List<Future<TeamBuilder.TeamFormationResult>> futures = pool.invokeAll(tasks);
 
             List<TeamBuilder.TeamFormationResult> results =
                     futures.stream()
@@ -54,12 +69,6 @@ public class FormationRunner {
             return TeamBuilder.formTeams(participants, teamSize);
         }
     }
-
-
-
-
-
-
 
     private TeamBuilder.TeamFormationResult pickBest(List<TeamBuilder.TeamFormationResult> results) {
 
