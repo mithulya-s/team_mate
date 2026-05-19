@@ -2,7 +2,7 @@
 
 **TeamMate** is an intelligent team forming application built for a university gaming club. It leverages a sophisticated heuristic teaming algorithm to optimally form balanced teams based on participants' personality types, skill levels, roles, and interests.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -18,7 +18,7 @@
 
 ---
 
-## 🎯 Overview
+## Overview
 
 TeamMate is a comprehensive Java-based application designed to automate and optimize team formation for gaming club events. The application distinguishes between two user roles:
 
@@ -52,7 +52,7 @@ The core algorithm prioritizes **personality types** (especially leaders and thi
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 team_mate/
@@ -89,7 +89,7 @@ team_mate/
 
 ---
 
-## 🏗️ Architecture & Design Patterns
+## Architecture & Design Patterns
 
 ### Design Patterns Implemented
 
@@ -123,7 +123,7 @@ team_mate/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -152,7 +152,7 @@ team_mate/
 
 ---
 
-## 📖 Usage Guide
+## Usage Guide
 
 ### Participant Flow
 
@@ -195,7 +195,7 @@ team_mate/
 
 ---
 
-## 🔧 Technical Details
+## Technical Details
 
 ### Teaming Algorithm
 
@@ -236,7 +236,7 @@ Scores range: 5-25 (5 questions × 1-5 scale)
 
 ---
 
-## 📋 Requirements
+## Requirements
 
 ### Participant Data (CSV Format)
 
@@ -268,7 +268,7 @@ P002,Jane Smith,jane@university.edu,STRATEGY,7,SUPPORT,18,THINKER
 
 ---
 
-## 📄 File Format
+## File Format
 
 ### Input: participants.csv
 Participant records for team formation (see Requirements section)
@@ -280,22 +280,6 @@ TeamNumber,ParticipantID,Name,Email,Interest,SkillLevel,Role,PersonalityScore,Pe
 1,P001,John Doe,john@university.edu,FPS,8,LEADER,22,LEADER
 1,P002,Jane Smith,jane@university.edu,STRATEGY,7,SUPPORT,18,THINKER
 ```
-
----
-
-## 🎓 Academic Context
-
-This project was developed as an Object-Oriented Programming (OOP) module assessment, demonstrating:
-- ✅ Encapsulation and data validation
-- ✅ Inheritance and polymorphism through interfaces
-- ✅ Design patterns and architectural principles
-- ✅ Concurrent programming and multithreading
-- ✅ File I/O and data persistence
-- ✅ Exception handling and error management
-- ✅ User interface design and input validation
-
-**Topics**: Assignment, Design Patterns, Java, OOP
-
 ---
 
 ## 📝 Notes
@@ -308,10 +292,4 @@ This project was developed as an Object-Oriented Programming (OOP) module assess
 
 ---
 
-## 📧 Contact
-
-For questions or issues, please contact the repository maintainer or open an issue on GitHub.
-
----
-
-**Built with ☕ Java | OOP & Design Patterns Edition**
+**Built with 🍵,Java & 💝**
